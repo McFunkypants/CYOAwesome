@@ -6,17 +6,31 @@ No coding required: just type a story in plain text. Great for writers!
 
 You can write a story and it will auto-magically create a multiple-choice adventure game for you. You can optionally sprinkle in a bit of logic inside square brackets to handle keys, stats, quests, sound, and images.
 
-All you need to do is type a story, sprinkle it with logic, and then share the game with your friends.
-
 ## GETTING STARTED
 
 Games all have scenes and items. Between scenes, the game waits for the player to make a choice. Once you change secenes, all past options become unavailable, except if a scene has no choices in it and is used to add to events taking place in the current scene.
 
 ## HOW TO WRITE A SCENE
 
+Simply type your story in the body of index.html. Linefeeds matter, and blank lines are respected. The engine will parse it, then hide it and run the game. 
+
 To start a new scene, just type a line that in ALL CAPS. To link to it in your story, type that same string of character with any capitalization. This makes story creation fast; you can stay in the creative flow.
 
 TIP: Don't use common words or you may get links you don't intend.
+
+## MULTIPLE CHOICE BUTTONS
+
+If you don't want "automatic" linking in the text, just name your scenes with words that won't appear in the text (MY_SCENE_NAME with underscores, for example) and add multiple-choice buttons instead:
+
+- description of choice 1 [SCENE_IF_CLICKED]
+
+- description of choice 2 [ANOTHER_SCENE]
+
+## DIALOG
+
+If a line starts with a double quote " character, the text is styled differently. Anything on that line is considered part of character speech, including any [image.png] logic, which is perfect for adding visual novel style facial expressions. For example:
+
+"What are you talking about?" [betty_angry.png]
 
 ## HOW TO ADD GAME LOGIC
 
@@ -94,3 +108,4 @@ With the else command, you can react to booleans (yes/no):
 You can write quantities in the story like this:
 
 You are holding [gold] gold coin[s].
+
