@@ -1,1 +1,532 @@
-<div>Hello World</div>
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>CYOAwesome by @McFunkypants</title>
+	<meta name="description" content="CYOAwesome by @McFunkypants">
+	<meta name="author" content="McFunkypants">
+	<link href="https://fonts.googleapis.com/css?family=Special+Elite" rel="stylesheet">
+	<link rel="stylesheet" href="CYOAwesome.css">
+	<link href="libs/animate.css" rel="stylesheet">
+	<style>
+	</style>
+</head>
+<body>
+
+<div id='game' onclick='hurryup()'>
+	<div id='story_so_far'></div>
+	<div id='current_scene'></div>
+	<div id='current_choices'></div>
+</div>
+
+<textarea id="game_source" onfocus="" onblur="" onchange="" onpaste="" oninput="src_changed()">
+MUSHROOM CIRCLE
+[wildmushroomcircle.png]
+[1st][get 5 gold]
+[1st]Drops of morning dew glint in the light of a rising sun. You are outdoors, standing in the middle of a mushroom circle. 
+
+All around you are fresh mushrooms, the air smells sweet, and in the distance looms a huge walled fortress. You are cold, damp, and very lost.
+
+To your left stands a huge stone watchtower, and up ahead you see a stone path leading to the fortress.
+
+An old backpack is strapped to your back, but it feels empty.
+
+BACKPACK
+[1st] You remove your trusty canvas backpack and take stock of your current inventory.
+[roll = 1d4]
+[roll==1] You are holding
+[roll==2] Your backpack contains
+[roll==3] Your inventory consists of
+[roll==4] You currently have
+[invcount = 0]
+[shard?] [invcount++] [shard] crystal shard[s],
+[mushroom?] [invcount++] [mushroom] magic mushroom[s],
+[flower?] [invcount++] [flower] honeyflower[s],
+[invcount > 0] and
+[gold] gold coin[s].
+
+FRESH MUSHROOMS
+[1st][get mushroom]You decide to pick one of the mushrooms for later use.
+[else][get mushroom]You decide to pick another.
+You now have [mushroom] mushroom[s].
+
+STONE TOWER
+[wildtowerdoor.png]
+Gazing up, you notice that this is a belltower, perhaps used as a lookout post. Standing outside the fortress walls, 
+from the top you could see beyond the mountains. The door is locked. 
+
+[has key] You decide to use the silver key to unlock the belltower door.
+[else] You decide to look for a key in one of the buildings up ahead.
+
+STONE PATH
+[wildpathtobridge.png]
+The path is made of rough-cut stone, looks anicient, and leads to a drawbridge.
+To the left of the path are giant natural hot springs, bubbling quietly.
+
+In the distance you can see a crooked tower.
+By your feet are some unusual yellow flowers, still closed after a chilly night.
+
+YELLOW FLOWERS
+[1st][get flower]The flowers glisten with nectar and shine like honey. You take one.
+[else] One of the lowers has already been picked, and you decide to leave the others to grow free.
+
+HOT SPRINGS
+[wildhotsprings.png]
+The water in the springs is boililng hot, smells faintly of sulfur, and radiates a comforting warmth.
+You can see the stone tower behind you, just down the stone path, and the crooked tower up ahead.
+To your right is a fortress wall protected by a moat with a drawbridge.
+
+DRAWBRIDGE
+[maplebridgetocastle.png]
+The drawbridge is down, and before you stands the grand entrance to a huge fortress made of stone.
+You can see ornate gardens beyond the fortress gates, and behind you is a stone path.
+
+FORTRESS GATES
+[maplecastlegates.png]
+Beyond the fortress entrance lies a beautiful, lush garden. A waterfall cascades down a rock island,
+upon which a majestic knarled maple tree grows. It looks a thousand years old, and has tiny red leaves the colour of rust.
+
+LUSH GARDEN
+[maplegemgarden.png]
+You are standing in a beautiful garden, simple and clean. It seems timeless, like the season is always summer here.
+To your right is a glowing cluster of crystals by a small bridge, and on the right are some houses.
+
+CRYSTALS
+[maplegemcluster.png]
+In a corner of the garden grows a shimmering cluster of giant crystals.
+[has chisel] You could collect a shard with your chisel.
+[else] You decide to look for some sort of tool that would alow you to collect one.
+To your left is a small bridge that leads to the upper fortress, and behind you are the fortress gates and their lush garden.
+
+COLLECT A SHARD
+[1st] [get shard] You strike the crystal with your chisel and in a flash of sparks a shard chips off. You put it into your bakpack for safe keeping.
+[else] These crystals have already been harvested, and a shard is in your bakpack.
+
+SOME HOUSES
+[maplecastlepath.png]
+Beyond the lush garden is another bridge leading to what look like houses or administrative buildings.
+Tucked behind them, in a back yard, is a stone monument. To your left is a stairway leading to an upper courtyard.
+
+UPPER PILLARS
+[maplecastlepillars.png]
+At the topmost level of the fortress is a grand roofed entrance, with massive marble columns and a grand maplewood door.
+Below you is a courtyard with paths leading in all directions.
+On your left is an ancient tree so overgrown you just might be able to climb it.
+
+STONE MONUMENT
+[maplemonolith.png]
+An ancient marble monument, covered in carved symbols in a language you cannot read, stands resolutely behind some houses.
+
+COURTYARD
+[maplepathtostonehenge.png]
+A stone path splits four ways in the middle of a central courtyard.
+
+Behind you are stairs leading to a small bridge.
+To your right are some houses, part of the lower fortress garden district.
+
+Up ahead, surrounded by flowers and trees, stands a circle of stone monoliths.
+There is also a set of stairs here that lead to the upper fortress pillars.
+
+SMALL BRIDGE
+[maplestairstostonehenge.png]
+The inner courtyard of the fortress is just over the small bridge by the lush garden.
+A plain wooden bench sits here, offering respite for weary travellers.
+Beyond the trees the path continues up a set of steep stairs to upper courtyard.
+
+STONE MONOLITHS
+[maplestonehenge.png]
+At the far end of the upper courtyard stands a henge of stones, arranged in a circle.
+In the center is a rock with a hole harved into it that surely faces into the sunrise on just the right day.
+
+MAPLEBELLHOUSE
+[maplebellhouse.png]
+
+MAPLECASTLEWALL
+[maplecastlewall.png]
+
+ANVILFARM
+[anvilfarm.png]
+
+ARENACORNER
+[arenacorner.png]
+
+ARENAROAD
+[arenaroad.png]
+
+ARENATAVERN
+[arenatavern.png]
+
+ARENATENTS
+[arenatents.png]
+
+AXEPATH
+[axepath.png]
+
+AXEROAD
+[axeroad.png]
+
+AXETAVERN
+[axetavern.png]
+
+BARRACKS
+[barracks.png]
+
+BARRACKSDUMMY
+[barracksdummy.png]
+
+BARRACKSTARGET
+[barrackstarget.png]
+
+BLACKSMITH
+[blacksmith.png]
+
+CABBAGECORNER
+[cabbagecorner.png]
+
+CABBAGEFIELD
+[cabbagefield.png]
+
+COURTYARDDOOR
+[courtyarddoor.png]
+
+COURTYARDENTRANCE
+[courtyardentrance.png]
+
+DOWNTOWN
+[downtown.png]
+
+EDGEOFTOWN
+[edgeoftown.png]
+
+ENTRANCECROSSROADS
+[entrancecrossroads.png]
+
+ENTRANCEGATES
+[entrancegates.png]
+
+ENTRANCEHOME
+[entrancehome.png]
+
+ENTRANCEROAD
+[entranceroad.png]
+
+ENTRANCESMITHY
+[entrancesmithy.png]
+
+ENTRANCEVENDOR
+[entrancevendor.png]
+
+FARMFRONTDOOR
+[farmfrontdoor.png]
+
+FARMHAYSTACKS
+[farmhaystacks.png]
+
+FARMROAD
+[farmroad.png]
+
+FOODCOURT
+[foodcourt.png]
+
+MAINSTREET
+[mainstreet.png]
+
+MAINSTREETHOMES
+[mainstreethomes.png]
+
+MARKETCORNER
+[marketcorner.png]
+
+MARKETSMITH
+[marketsmith.png]
+
+MARKETSTALLS
+[marketstalls.png]
+
+MARKETVENDOR
+[marketvendor.png]
+
+PALACEDOOR
+[palacedoor.png]
+
+PALACEENTRANCE
+[palaceentrance.png]
+
+PALACEEXIT
+[palaceexit.png]
+
+PALACEGATE
+[palacegate.png]
+
+PALACEROAD
+[palaceroad.png]
+
+PALACEROADBACK
+[palaceroadback.png]
+
+PILLAGEDHOME
+[pillagedhome.png]
+
+PILLAGEDROAD
+[pillagedroad.png]
+
+PUMPKINFIELD
+[pumpkinfield.png]
+
+PUMPKINPATCH
+[pumpkinpatch.png]
+
+RIVERBRIDGE
+[riverbridge.png]
+
+RIVERCELLS
+[rivercells.png]
+
+RIVERCROSSING
+[rivercrossing.png]
+
+TOWNCROSSROADS
+[towncrossroads.png]
+
+TREESHRINE
+[treeshrine.png]
+
+TWOBRIDGES
+[twobridges.png]
+
+WELLVENDOR
+[wellvendor.png]
+
+WHEAT
+[wheat.png]
+
+WILDCRYPTENTRANCE
+[wildcryptentrance.png]
+
+WILDCRYPTPATH
+[wildcryptpath.png]
+
+WILDMAGECLIMB
+[wildmageclimb.png]
+
+WILDMAGESTAIRS
+[wildmagestairs.png]
+
+WILDMAGETOP
+[wildmagetop.png]
+
+WILDMAGETOWER
+[wildmagetower.png]
+
+WINDMILLCROSSING
+[windmillcrossing.png]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+THE END.
+You win!
+</textarea>
+<!-- </div> -->
+
+
+<!-- game HUD -->
+<div id='game_gui'>
+	<div id='gui_TL'>CYOAwesome Demo Story</div>
+	<div id='gui_TR'>Turn 1</div>
+</div>
+
+<!-- editor HUD -->
+<div id='editor_gui'>
+	<div id='editor_gui_TL'>CREATIVE MODE</div>
+	<div id='editor_gui_TR'>
+		<a class='menubutton' title='Start a new game project.' href='javascript:new_game_code()'>New</a>
+		<a class='menubutton' title='Download the game source code as a text file.' href='javascript:download_source_code()'>Save TXT</a>
+		<a class='menubutton' title='Download the game source code as a text file.' href='javascript:download_html()'>Export HTML</a>
+		<a class='menubutton' title='Download the playable game as an html file.' href='javascript:download_zip()'>Build ZIP</a>
+		<a class='menubutton' title='Edit the game settings.' href='javascript:edit_settings()'>Settings</a>
+		<a class='menubutton' title='Edit the game settings.' href='javascript:edit_help()'>Help</a>
+	</div>
+</div>
+
+<div id='settings_gui'>
+	GAME SETTINGS
+
+	Game Title:
+	<input id='gamename' name='gamename' type='text' length='40'>
+
+	Game Credits:
+	<input id='gamecredits' name='gamecredits' type='text' length='40'>
+
+	Words Per Second:
+	<input id='gamecredits' name='gamecredits' type='text' length='40'>
+
+</div>
+
+<div id='help_gui'>
+HELP
+
+CYOAwesome is designed around a simple rule: less is more!
+
+All you need to do is type a story, sprinkle it with logic, and then share the game with your friends.
+
+SCENES AND ITEMS
+Games all have scenes and items. Between scenes, the game waits for the player to make a choice. Once you change secenes, all past options become unavailable, except if a scene has no choices in it and is used to add to events taking place in the current scene.
+
+HOW TO WRITE A SCENE
+To start a new scene, just type a line that in ALL CAPS. To link to it in your story, type that same string of character with any capitalization. This makes story creation fast; you can stay in the creative flow.
+
+TIP: Don't use common words or you may get links you don't intend.
+
+HOW TO ADD GAME LOGIC
+To set or check a variable, all you need is to put your logic inside square brackets. The code gets run at the moment the text rendering gets to it. Here are some examples:
+
+[get gold]
+[gold + 1]
+[has 5 gold?]
+[drop 2 gold]
+[no gold?]
+[saw scenename?]
+[imagefile.jpg]
+[soundfile.mp3]
+[1st]
+[else]
+
+TIP: items (gold, key, kisses) have to be only one word.
+TIP: the SAW command checks our scene visit count.
+TIP: to allow backtracking, set things only once with [1st]
+TIP: else is run if the previous ? condition was false
+
+I tried to make it pretty permissive of coding style, so you 
+can also type stuff like this!
+
+[if you have the key]
+[if the player has a key]
+[do we have the key?]
+[got a key?]
+[pick up 250 silver!]
+[grab an apple]
+[lose 5 hp]
+[hp++]
+
+With the else command, you can react to booleans (yes/no):
+
+[1st time?]
+[else]
+[has key?]
+[else]
+[if saw monster]
+[else]
+
+You can write quantities in the story like this:
+
+You are holding [gold] gold coin[s].
+
+</div>
+
+<div id='map_page'>
+<div class='hud' id='stats_bg'>
+<div class='hud' id='stats_div'>
+	<span id='TURNS'>Turn [TURN_COUNT]</span>
+	<span id='STR'>18</span>
+	<span id='AGI'>16</span>
+	<span id='WIS'>11</span>
+</div></div>
+<div class='hud' id='inventory_bg'><div class='hud' id='inventory_div'>You are carrying
+[invcount = 0]
+[shard?] [shard] crystal shard[s], [invcount++]
+[mushroom?] [mushroom] magic mushroom[s], [invcount++]
+[flower?] [flower] honeyflower[s], [invcount++]
+[key?] [key] iron key[s], [invcount++],
+[invcount?] and
+[gold] gold coin[s].
+</div></div>
+<div class='hud' id='map_div'>Map:</div>
+<div class='hud' id='quests_div'>Quests:[QUEST_MYSTERY?]</div>
+
+<div id='swingmeter'>
+	<div id='swingtoolow'></div>
+	<div id='swinggoodlow'></div>
+	<div id='swingsweetlow'></div>
+	<div id='swingsweetest'></div>
+	<div id='swingsweethigh'></div>
+	<div id='swinggoodhigh'></div>
+	<div id='swingtext'>SWING METER</div>
+	<div id='swingpower'></div>
+</div>
+
+<script language='javascript' type='text/javascript'>
+var swingpowerdiv = null;
+var swingtextdiv = null;
+var swingframecount = 0;
+var swinging = false;
+function swingmetertimer()
+{
+	if (!swinging) return;
+	swingframecount++;
+	if (swingframecount>100) 
+	{
+		swing_stop();
+	}
+	else
+	{
+		swingpowerdiv.style.width = swingframecount + 'px';
+		setTimeout(swingmetertimer,5);
+	}
+}
+function swing_start()
+{
+	swinging = true;
+	if (!swingpowerdiv) swingpowerdiv = document.getElementById('swingpower');
+	if (!swingtextdiv) swingtextdiv = document.getElementById('swingtext');
+	swingtextdiv.innerHTML = "SWINGING...";
+	swingframecount = 0;
+	swingmetertimer();
+}
+function swing_stop()
+{
+	swinging = false;
+	swingpower = 100 - Math.abs(75-swingframecount)*5; // distance from 75 sweet spot
+	if (swingpower<0) swingpower = 0;
+	swingtextdiv.innerHTML = "SWING POWER: " + swingpower; //swingframecount;
+}
+function swingclick()
+{
+	if (swinging) 
+		swing_stop();
+	else
+		swing_start();
+}
+
+// init - FIXME
+var swingmeter_div = document.getElementById('swingmeter');
+swingmeter.onmousedown = swingclick;
+
+</script>
+
+
+</div>
+
+<!--
+<script src="libs/jquery.min.js"></script>
+<script src="libs/jquery.fittext.js"></script>
+<script src="libs/jquery.lettering.js"></script>
+<script src="libs/jquery.textillate.js"></script>
+-->
+<script src="libs/jszip.min.js"></script>
+<script src="libs/howler.core.min.js"></script>
+<script src="libs/download.min.js"></script>
+<script src="CYOAwesome.js"></script>
+</body>
+</html>
