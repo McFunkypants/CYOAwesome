@@ -42,39 +42,35 @@ KEY
 
 If you don't want "automatic" linking in the text, just name your scenes with words that won't appear in the text (MY_SCENE_NAME with underscores, for example) and add multiple-choice buttons instead:
 
+```
 - description of choice 1 [SCENE_IF_CLICKED]
-
 - description of choice 2 [ANOTHER_SCENE]
+```
 
 ## DIALOG
 
 If a line starts with a double quote " character, the text is styled differently. Anything on that line is considered part of character speech, including any [image.png] logic, which is perfect for adding visual novel style facial expressions. For example:
 
+```
 "What are you talking about?" [betty_angry.png]
+```
 
 ## HOW TO ADD GAME LOGIC
 
 To set or check a variable, all you need is to put your logic inside square brackets. The code gets run at the moment the text rendering gets to it. Here are some examples:
 
+```
 [get gold]
-
 [gold + 1]
-
 [has 5 gold?]
-
 [drop 2 gold]
-
 [no gold?]
-
 [saw scenename?]
-
 [imagefile.jpg]
-
 [soundfile.mp3]
-
 [1st]
-
 [else]
+```
 
 ## QUICK LOGIC TIPS
 
@@ -91,41 +87,35 @@ TIP: else is run if the previous ? condition was false
 I tried to make it pretty permissive of coding style, so you 
 can also type stuff like this!
 
+```
 [if you have the key]
-
 [if the player has a key]
-
 [do we have the key?]
-
 [got a key?]
-
 [pick up 250 silver!]
-
 [grab an apple]
-
 [lose 5 hp]
-
 [hp++]
+```
 
 ## CONDITIONAL LOGIC
 
 With the else command, you can react to booleans (yes/no):
 
+```
 [1st time?]
-
 [else]
-
 [has key?]
-
 [else]
-
 [if saw monster]
-
 [else]
+```
 
 ## ITEM QUANTITIES AND PLURALS
 
 You can write quantities in the story like this:
 
+```
 You are holding [gold] gold coin[s].
+```
 
