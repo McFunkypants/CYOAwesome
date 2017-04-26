@@ -1,0 +1,151 @@
+WRITE A STORY, MAKE A GAME
+
+CYOAwesome is a game generator. It's perfect for interactive fiction, visual novels, and gamebooks where you choose your own ending.
+
+You can write a story and it will auto-magically create a multiple-choice adventure game for you. You can optionally sprinkle in a bit of logic inside square brackets to handle keys, stats, quests, sound, and images. You can export to html5, windows, mac, linux, android, and ios.
+
+Learn how by experimenting right now! Just start typing.
+
+There are code examples in the info screen, a bunch of tests, and if you're looking for adventure, proceed to the seaside cliffs!
+
+A BUNCH OF TESTS
+The following few paragraphs contain a lot of logic snippets enclosed in square brackets, and will give and take inventory, check conditionals, and provide everything a storyteller needs to handle experience points, locks, keys, memories, feelings, hit points, and puzzles.
+- test pickups
+- test phrasing
+- test inventory
+- test hp
+- test rpg
+- test more
+
+TEST MORE
+Let's test a bunh of stuff.
+[random = 1d6] You rolled a [random].
+[random > 3] Which is over 3.
+[else] Which is not over 3.
+[get 5 gold] You get 5 gold. You now have [gold].
+[cash = gold] Setting cash [cash] to gold [gold].
+[cash--] Subtracting one. Now you have [cash].
+[is cash == gold?] Cash [cash] equals gold [gold].
+[else] Cash [cash] is not equal to gold [gold].
+[cash != gold] Cash is not equal to gold.
+[else] Cash is equal to gold.
+
+TEST PICKUPS
+Let's test pickups.
+[get key] You grab a key. You now have [key] key[s].
+[key + 1] And another. You now have [key] key[s].
+[has 5 key?] You have five or more!
+[else] You have fewer than five.
+[drop 2 key] You drop a couple. You now have [key] key[s].
+[no key?] You have no keys at all!
+[else] You do have some keys.
+[has a key?] What? You can't possibly have a key!
+
+TEST PHRASING
+Let's test alternate phrasing.
+[hp = 100] I'm healthy!
+[get key] You get a key.
+[if you have the key] Yes, you have it.
+[if the player has a key] Still can.
+[do we have the key?] Again.
+[got a key?] Good.
+[pick up 250 silver!] Yay, money!
+[if you have some silver] Great. I'm rich.
+[silver = 0] Easy come, easy go.
+[grab an apple] Looks tasty.
+[lose 5 hp] Ouch! Poisoned!
+[hp++] Recovering.
+You now have [hp] hit point[s], [key] key[s], [silver] silver, and [apple] apple[s].
+
+TEST INVENTORY
+You have [key] key[s], [silver] silver[s], [apple] apple[s], [gold] gold coin[s], $[cash] in cash, and [hp] hit point[s].
+
+TEST HP
+Let's test hit points.
+You currently have [hp] hit point[s].
+[hp == 100] Which is correct!
+[hp is 100?] Yes!
+[is hp > 99?] Good!
+[hp < 100] It's under 100.
+[hp > 100] It's over 100.
+[hp != 100] It is not 100.
+[hp is not 100] It is not 100.
+[hp?] Yup we have some!
+[hp < 1?] Hey! You're dead!
+[has < 1 hp] Yep, still dead.
+[no hp] No hitpoints at all.
+[if the player has no hp] No hitpoints at all.
+[hp?] You do have hp.
+[else] As expected, no hp.
+[hp>0] You're alive!
+[hp=0] Setting hp to zero.
+[hp=1?] It is one! What?!
+[hp + 100] Yum, a potion!
+You now have [hp] hit point[s].
+
+
+TEST RPG
+Let's test rpg combat.
+[roll = 1d20] You roll a [roll].
+[roll > 10] You hit!
+[else] You miss!
+You can even use stats:
+[def = 15] Your defense is [def].
+[roll = 1d20] Enemy rolled [roll].
+[roll > def] [damage = 3d6] [hp - damage] Enemy hit you for [damage] damage. 
+[else] Enemy missed.
+[hp < 1] You died! [goto GAME OVER]
+[else] Next round... You currently have [hp] hit point[s]. [goto TEST RPG]
+
+GAME OVER
+You have died. You can restart a bunch of tests if you wish, or visit the seaside cliffs.
+
+SEASIDE CLIFFS
+[1st][ambience.mp3][ornament.png][get map]It was a dark and stormy night.
+[else]You return to the cliffs.
+There is an abandoned shack here, and a road leading north to an old tavern. Good thing you have a treasure map in your back pocket.
+[has luck?]You might want to roll the dice!
+[has gold?]You currently have [GOLD] gold pieces in your pocket.
+
+BACKPACK
+You take stock of your inventory.
+[key?] Around your neck is a rusty key.
+[gold?] You are carrying [gold] gold[s] in your pocket.
+You have earned [xp] experience points.
+In your back pocket is a treasure map.
+
+RUSTY KEY
+The key is heavy, made of iron, and looks extremely old.
+
+ROLL THE DICE
+You feel lucky. Do you roll one die, three dice or a twenty-sided die?
+
+ONE DIE
+[1d6]
+
+THREE DICE
+[3d6]
+
+TWENTY-SIDED DIE
+[d20]
+
+OLD TAVERN
+The tavern looks warm and inviting. You could venture inside, peer into the window, or return to the seaside cliffs.
+[has gold?]You currently have [GOLD] gold pieces in your pocket.
+
+TREASURE MAP
+The treasure map is worn and faded, soft as ancient leather. You've folded and unfolded it a thousand times.
+
+ABANDONED SHACK
+The shack is ancient and sunbleached. 
+[NO GOLD]Hidden in the shadows is a gold coin.
+[ELSE]There's nothing in the shack.
+
+GOLD COIN
+[GET GOLD]You pick up the gold coin. It gleams in your hand as you feel a surge of luck. Perhaps you could spend it at the old tavern?
+
+INSIDE
+It looks pretty bad.
+
+WINDOW
+Looks great.
