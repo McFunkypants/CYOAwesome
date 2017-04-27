@@ -1239,8 +1239,8 @@ function go(scene,tag) // user made a choice
 
 function update_GUI()
 {
-	gui_TL.innerHTML = currentscene + " - Turn " + turn_number;
-	gui_TR.innerHTML = "<a href='javascript:go(\"MAP\")'>MAP</a>, <a href='javascript:go(\"INVENTORY\")'>INVENTORY</a>"; // stringify_inventory();
+	if (gui_TL) gui_TL.innerHTML = currentscene + " - Turn " + turn_number;
+	if (gui_TR) gui_TR.innerHTML = "<a href='javascript:go(\"MAP\")'>MAP</a>, <a href='javascript:go(\"INVENTORY\")'>INVENTORY</a>"; // stringify_inventory();
 }
 
 function plural(what,howmany)
