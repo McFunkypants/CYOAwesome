@@ -9,4 +9,308 @@
 
 <script src="libs/download.min.js"></script>
 
+<!-- game HUD -->
+<div id='game_gui'>
+	<div id='gui_TL'>CYOAwesome Demo Story</div>
+	<div id='gui_TR'>Turn 1</div>
+</div>
+
+<!-- editor HUD -->
+<div id='editor_gui'>
+	<div id='editor_gui_TL'>CREATIVE MODE</div>
+	<div id='editor_gui_TR'>
+		<a class='menubutton' title='Start a new game project.' href='javascript:new_game_code()'>New</a>
+		<a class='menubutton' title='Download the game source code as a text file.' href='javascript:download_source_code()'>Save TXT</a>
+		<a class='menubutton' title='Download the game source code as a text file.' href='javascript:download_html()'>Export HTML</a>
+		<a class='menubutton' title='Download the playable game as an html file.' href='javascript:download_zip()'>Build ZIP</a>
+		<a class='menubutton' title='Edit the game settings.' href='javascript:edit_settings()'>Settings</a>
+		<a class='menubutton' title='Edit the game settings.' href='javascript:edit_help()'>Help</a>
+	</div>
+</div>
+
+<div id='settings_gui'>
+	GAME SETTINGS
+
+	Game Title:
+	<input id='gamename' name='gamename' type='text' length='40'>
+
+	Game Credits:
+	<input id='gamecredits' name='gamecredits' type='text' length='40'>
+
+	Words Per Second:
+	<input id='gamecredits' name='gamecredits' type='text' length='40'>
+
+</div>
+
+<div id='help_gui'>
+HELP
+
+CYOAwesome is designed around a simple rule: less is more!
+
+All you need to do is type a story, sprinkle it with logic, and then share the game with your friends.
+
+SCENES AND ITEMS
+Games all have scenes and items. Between scenes, the game waits for the player to make a choice. Once you change secenes, all past options become unavailable, except if a scene has no choices in it and is used to add to events taking place in the current scene.
+
+HOW TO WRITE A SCENE
+To start a new scene, just type a line that in ALL CAPS. To link to it in your story, type that same string of character with any capitalization. This makes story creation fast; you can stay in the creative flow.
+
+TIP: Don't use common words or you may get links you don't intend.
+
+HOW TO ADD GAME LOGIC
+To set or check a variable, all you need is to put your logic inside square brackets. The code gets run at the moment the text rendering gets to it. Here are some examples:
+
+[get gold]
+[gold + 1]
+[has 5 gold?]
+[drop 2 gold]
+[no gold?]
+[saw scenename?]
+[imagefile.jpg]
+[soundfile.mp3]
+[1st]
+[else]
+
+TIP: items (gold, key, kisses) have to be only one word.
+TIP: the SAW command checks our scene visit count.
+TIP: to allow backtracking, set things only once with [1st]
+TIP: else is run if the previous ? condition was false
+
+I tried to make it pretty permissive of coding style, so you 
+can also type stuff like this!
+
+[if you have the key]
+[if the player has a key]
+[do we have the key?]
+[got a key?]
+[pick up 250 silver!]
+[grab an apple]
+[lose 5 hp]
+[hp++]
+
+With the else command, you can react to booleans (yes/no):
+
+[1st time?]
+[else]
+[has key?]
+[else]
+[if saw monster]
+[else]
+
+You can write quantities in the story like this:
+
+You are holding [gold] gold coin[s].
+
+</div>
+
+<!-- you can run other "scenes" in their own windows
+	which is perfect for GUI stats and backpack displays -->
+<!--	
+<div id='map_page'>
+<div class='hud' id='stats_bg'>
+<div class='hud' id='stats_div'>
+	<span id='TURNS'>Turn [TURN_COUNT]</span>
+	<span id='STR'>18</span>
+	<span id='AGI'>16</span>
+	<span id='WIS'>11</span>
+</div></div>
+<div class='hud' id='inventory_bg'><div class='hud' id='inventory_div'>You are carrying
+[invcount = 0]
+[shard?] [shard] crystal shard[s], [invcount++]
+[mushroom?] [mushroom] magic mushroom[s], [invcount++]
+[flower?] [flower] honeyflower[s], [invcount++]
+[key?] [key] iron key[s], [invcount++],
+[invcount?] and
+[gold] gold coin[s].
+</div></div>
+<div class='hud' id='map_div'>Map:</div>
+<div class='hud' id='quests_div'>Quests:[QUEST_MYSTERY?]</div>
+</div>
+-->
     
+
+    <!-- unused locations I have images of
+    MAPLEBELLHOUSE
+[maplebellhouse.png]
+
+MAPLECASTLEWALL
+[maplecastlewall.png]
+
+ANVILFARM
+[anvilfarm.png]
+
+ARENACORNER
+[arenacorner.png]
+
+ARENAROAD
+[arenaroad.png]
+
+ARENATAVERN
+[arenatavern.png]
+
+ARENATENTS
+[arenatents.png]
+
+AXEPATH
+[axepath.png]
+
+AXEROAD
+[axeroad.png]
+
+AXETAVERN
+[axetavern.png]
+
+BARRACKS
+[barracks.png]
+
+BARRACKSDUMMY
+[barracksdummy.png]
+
+BARRACKSTARGET
+[barrackstarget.png]
+
+BLACKSMITH
+[blacksmith.png]
+
+CABBAGECORNER
+[cabbagecorner.png]
+
+CABBAGEFIELD
+[cabbagefield.png]
+
+COURTYARDDOOR
+[courtyarddoor.png]
+
+COURTYARDENTRANCE
+[courtyardentrance.png]
+
+DOWNTOWN
+[downtown.png]
+
+EDGEOFTOWN
+[edgeoftown.png]
+
+ENTRANCECROSSROADS
+[entrancecrossroads.png]
+
+ENTRANCEGATES
+[entrancegates.png]
+
+ENTRANCEHOME
+[entrancehome.png]
+
+ENTRANCEROAD
+[entranceroad.png]
+
+ENTRANCESMITHY
+[entrancesmithy.png]
+
+ENTRANCEVENDOR
+[entrancevendor.png]
+
+FARMFRONTDOOR
+[farmfrontdoor.png]
+
+FARMHAYSTACKS
+[farmhaystacks.png]
+
+FARMROAD
+[farmroad.png]
+
+FOODCOURT
+[foodcourt.png]
+
+MAINSTREET
+[mainstreet.png]
+
+MAINSTREETHOMES
+[mainstreethomes.png]
+
+MARKETCORNER
+[marketcorner.png]
+
+MARKETSMITH
+[marketsmith.png]
+
+MARKETSTALLS
+[marketstalls.png]
+
+MARKETVENDOR
+[marketvendor.png]
+
+PALACEDOOR
+[palacedoor.png]
+
+PALACEENTRANCE
+[palaceentrance.png]
+
+PALACEEXIT
+[palaceexit.png]
+
+PALACEGATE
+[palacegate.png]
+
+PALACEROAD
+[palaceroad.png]
+
+PALACEROADBACK
+[palaceroadback.png]
+
+PILLAGEDHOME
+[pillagedhome.png]
+
+PILLAGEDROAD
+[pillagedroad.png]
+
+PUMPKINFIELD
+[pumpkinfield.png]
+
+PUMPKINPATCH
+[pumpkinpatch.png]
+
+RIVERBRIDGE
+[riverbridge.png]
+
+RIVERCELLS
+[rivercells.png]
+
+RIVERCROSSING
+[rivercrossing.png]
+
+TOWNCROSSROADS
+[towncrossroads.png]
+
+TREESHRINE
+[treeshrine.png]
+
+TWOBRIDGES
+[twobridges.png]
+
+WELLVENDOR
+[wellvendor.png]
+
+WHEAT
+[wheat.png]
+
+WILDCRYPTENTRANCE
+[wildcryptentrance.png]
+
+WILDCRYPTPATH
+[wildcryptpath.png]
+
+WILDMAGECLIMB
+[wildmageclimb.png]
+
+WILDMAGESTAIRS
+[wildmagestairs.png]
+
+WILDMAGETOP
+[wildmagetop.png]
+
+WILDMAGETOWER
+[wildmagetower.png]
+
+WINDMILLCROSSING
+[windmillcrossing.png]
+
+-->
