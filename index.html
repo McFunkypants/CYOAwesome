@@ -17,9 +17,19 @@
 	<div id='story_so_far'></div>
 	<div id='current_scene'></div>
 	<div id='current_choices'></div>
+	<div id='swingmeter'>
+		<div id='swingtoolow'></div>
+		<div id='swinggoodlow'></div>
+		<div id='swingsweetlow'></div>
+		<div id='swingsweetest'></div>
+		<div id='swingsweethigh'></div>
+		<div id='swinggoodhigh'></div>
+		<div id='swingtext'>SWING METER</div>
+		<div id='swingpower'></div>
+	</div>
 </div>
 
-<textarea id="game_source" onfocus="" onblur="" onchange="" onpaste="" oninput="src_changed()">
+<textarea id="game_source">
 MUSHROOM CIRCLE
 [wildmushroomcircle.png]
 [1st][get 5 gold]
@@ -435,6 +445,9 @@ You are holding [gold] gold coin[s].
 
 </div>
 
+<!-- you can run other "scenes" in their own windows
+	which is perfect for GUI stats and backpack displays -->
+<!--	
 <div id='map_page'>
 <div class='hud' id='stats_bg'>
 <div class='hud' id='stats_div'>
@@ -454,79 +467,10 @@ You are holding [gold] gold coin[s].
 </div></div>
 <div class='hud' id='map_div'>Map:</div>
 <div class='hud' id='quests_div'>Quests:[QUEST_MYSTERY?]</div>
-
-<div id='swingmeter'>
-	<div id='swingtoolow'></div>
-	<div id='swinggoodlow'></div>
-	<div id='swingsweetlow'></div>
-	<div id='swingsweetest'></div>
-	<div id='swingsweethigh'></div>
-	<div id='swinggoodhigh'></div>
-	<div id='swingtext'>SWING METER</div>
-	<div id='swingpower'></div>
 </div>
-
-<script language='javascript' type='text/javascript'>
-var swingpowerdiv = null;
-var swingtextdiv = null;
-var swingframecount = 0;
-var swinging = false;
-function swingmetertimer()
-{
-	if (!swinging) return;
-	swingframecount++;
-	if (swingframecount>100) 
-	{
-		swing_stop();
-	}
-	else
-	{
-		swingpowerdiv.style.width = swingframecount + 'px';
-		setTimeout(swingmetertimer,5);
-	}
-}
-function swing_start()
-{
-	swinging = true;
-	if (!swingpowerdiv) swingpowerdiv = document.getElementById('swingpower');
-	if (!swingtextdiv) swingtextdiv = document.getElementById('swingtext');
-	swingtextdiv.innerHTML = "SWINGING...";
-	swingframecount = 0;
-	swingmetertimer();
-}
-function swing_stop()
-{
-	swinging = false;
-	swingpower = 100 - Math.abs(75-swingframecount)*5; // distance from 75 sweet spot
-	if (swingpower<0) swingpower = 0;
-	swingtextdiv.innerHTML = "SWING POWER: " + swingpower; //swingframecount;
-}
-function swingclick()
-{
-	if (swinging) 
-		swing_stop();
-	else
-		swing_start();
-}
-
-// init - FIXME
-var swingmeter_div = document.getElementById('swingmeter');
-swingmeter.onmousedown = swingclick;
-
-</script>
-
-
-</div>
-
-<!--
-<script src="libs/jquery.min.js"></script>
-<script src="libs/jquery.fittext.js"></script>
-<script src="libs/jquery.lettering.js"></script>
-<script src="libs/jquery.textillate.js"></script>
 -->
-<script src="libs/jszip.min.js"></script>
+
 <script src="libs/howler.core.min.js"></script>
-<script src="libs/download.min.js"></script>
 <script src="CYOAwesome.js"></script>
 </body>
 </html>

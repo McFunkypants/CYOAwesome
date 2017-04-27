@@ -2100,7 +2100,17 @@ function battle_end()
 	if (battlediv) battlediv.style.display='none';
 	if (swingdiv) swingdiv.style.display='none';
 }
+
+var swingmeter_div = null;
+function swing_meter_init()
+{
+	// init - FIXME
+	swingmeter_div = document.getElementById('swingmeter');
+	swingmeter_div.onmousedown = swingclick;
+}
 //////////////////////////////////////////////////////////////// BATTLE ENDS
+
+
 
 
 
