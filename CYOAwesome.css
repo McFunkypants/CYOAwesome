@@ -67,28 +67,29 @@ img {
 	margin:0; padding:0;
 }
 
-#story_so_far { margin:auto; width:60%; max-width:800px; padding:0; 
--webkit-user-select: none;  /* Chrome all / Safari all */
-  -moz-user-select: none;     /* Firefox all */
-  -ms-user-select: none;      /* IE 10+ */
-  user-select: none;          /* Likely future */      
-  }
-#current_scene { margin:auto; width:80%; padding:0; 
--webkit-user-select: none;  /* Chrome all / Safari all */
-  -moz-user-select: none;     /* Firefox all */
-  -ms-user-select: none;      /* IE 10+ */
-  user-select: none;          /* Likely future */      
+#story_so_far { 
+	margin:auto; width:80%; max-width:960px; padding:0; 
+	-webkit-user-select: none;  /* Chrome all / Safari all */
+	-moz-user-select: none;     /* Firefox all */
+	-ms-user-select: none;      /* IE 10+ */
+	user-select: none;          /* Likely future */      
+ }
 
-/* multicolumn is messy and balanced but liquid 
-margin-top:8%;
-margin-left:15%; 
-column-count: 2;
-column-gap: 64px;
-column-fill: auto;
-*/
+#current_scene {
+	margin:auto; width:80%; max-width:960px; padding:0; 
+	-webkit-user-select: none;  /* Chrome all / Safari all */
+	-moz-user-select: none;     /* Firefox all */
+	-ms-user-select: none;      /* IE 10+ */
+	user-select: none;          /* Likely future */      
 
-
-  }
+	/* multicolumn is messy and balanced but liquid 
+	margin-top:8%;
+	margin-left:15%; 
+	column-count: 2;
+	column-gap: 64px;
+	column-fill: auto;
+	*/
+}
 
 
 #game_source, #settings_gui, #help_gui { 
