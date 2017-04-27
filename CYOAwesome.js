@@ -115,20 +115,21 @@ x visual novel mode (cls)
 
 */
 
+// for no globals, uncomment next line and last line of file
+// then edit the html to refer to game.functions()
+
+// var game = new CYOAwesome(); function CYOAwesome() {
+
 "use strict"; // ensure clean clode
 
 var debugmode = true; // no console log if false
 var CLEARSCREEN_EACH_SCENE = false;
 var CLEARSCREEN_BEFORE_IMAGES = false;
-
 var fastmode = false; // no text animation if we're editing
 var hurry = false; // user wants to fast fwd this scene
 
-// for no globals, uncomment next line and last line of file
-// var game = new CYOAwesome(); function CYOAwesome() {
-// then edit the html to refer to game.functions()
-
 // game data: reset in init()
+var src = ""; // the entire text full game source code
 var firstscene = ""; // string name
 var scene = []; // each scene holds an array of string lines
 var scenelist = []; // array of scene names for quick access
@@ -136,6 +137,7 @@ var code_result = true; // boolean for last code result
 var sceneCount = 0; // total in entire game
 var last_cls_scene = ""; // used to fix in dead ends
 var second_last_cls_scene = ""; // used to fix in dead ends
+
 // game state: reset in init()
 var currentscene = ""; // string name
 var turn_number = 0; // incremented every click
@@ -143,6 +145,8 @@ var visited_scenes = []; // so we know where we've been for SAW,1ST
 var inventory = []; // keys/values for HAS,NO,GET,DEL,PUT,>,<,=,+,-,?
 var walkthrough = []; // every link linked in order
 var story_so_far = ""; // optimization: remember the past html
+var ms_per_word = 50; // text animation speed
+var prevlink = ""; // name of last clicked word
 
 // html elements
 var gamediv = null; // holds entire game
@@ -153,18 +157,33 @@ var currentscene_div = null; // where dynamic animated text goes
 var story_so_far_div = null; // non-interactive past story events
 var currentchoices_div = null; // for multiple choices so we can delete
 
-// text animation
-var ms_per_word = 50;
-var prevlink = "";
-
+// audio engine see soundsystem.js
 var soundSystem = null;
 
-var src = ""; // the entire text full source code as of the most recent edit
+// HUD (gui) elements
+var stats_div = null;
+var inventory_div = null;
+var map_div = null;
+var quests_div = null;
+
+// source code for HUD elements
+var stats_div_src = null;
+var inventory_div_src = null;
+var map_div_src = null;
+var quests_div_src = null;
+
+// animated word by word
+var anim_str = "";
+var anim_num = 0;
+var anim_has_link = false;
+
+// back up previous text and clear out links
+var the_scene_so_far = ""; // html ripped every frame TODO: optimize
 
 function init()
 {
 	if (debugmode) console.log("------------------------------------------------");
-	if (debugmode) console.log("CYOAwesome v0.3 by Christer McFunkypants Kaitila");
+	if (debugmode) console.log("CYOAwesome v0.4 by Christer McFunkypants Kaitila");
 	if (debugmode) console.log("------------------------------------------------");
 
 	init_browser();
@@ -186,6 +205,7 @@ function init()
 	turn_number = 0;
 	code_result = true;
 
+	// clean up the story source
 	src = src.replace(/\r\n/g, "\n"); // change CRLF to LF
 	src = src.replace(/\n\n/g, "\n<br><br>\n"); // change double blank lines to breaks
 	var line = src.split('\n'); // split each line
@@ -193,6 +213,7 @@ function init()
 	line = line.filter(notBlank); // discard empty ones
 	if (debugmode) console.log(line.length + " lines found.");
 	
+	// put each line into the proper scene
 	for (var pnum=0; pnum<line.length; pnum++)
 	{
 		if (isUpperCase(line[pnum])) // new scene! ENTIRE LINE IS UPPERCASE
@@ -241,6 +262,7 @@ function init()
 
 }
 
+// grab references to a few key html elements
 function init_browser()
 {
 	//if (debugmode) console.log('init_browser');
@@ -259,6 +281,7 @@ function init_browser()
 	inventory_div = document.getElementById("inventory_div");
 	map_div = document.getElementById("map_div");
 	quests_div = document.getElementById("quests_div");
+
 	// source code for HUD elements
 	if (stats_div) stats_div_src = stats_div.innerHTML;
 	if (inventory_div) inventory_div_src = inventory_div.innerHTML;
@@ -474,19 +497,20 @@ function parse_line(str) // main workhorse of the engine
 		return "";
 	}
 
-	if (str[0] == "\"")
+	if (str[0] == "\"") // starts with a quotation mark?
 	{
 		//if (debugmode) console.log('Dialog mode!');
 		isdialog = true;
 	}
 
-	if (str[0] == "-")
+	if (str[0] == "-") // multiple choice list?
 	{
 		//if (debugmode) console.log('Button mode!');
 		str = str.slice(1).trim(); // strip off the dash
 		isbutton = true;
 	}
 
+	// look at each character, executing [code] in square brackets
 	for (var i = 0, len = str.length; i < len; i++)
 	{
 	
@@ -902,21 +926,12 @@ function parse_line(str) // main workhorse of the engine
 		}
 	}
 	
-	if (!skip)
+	if (!skip) // conditional logic may be in effect
 	{
 		// search for any scenes to link automagically
 		// unless we are in a choice button
 		if (!(isbutton && code_clean != undefined) && do_not_linkify==false)
 		{
-			/*
-			for (var lookfor in scenelist) {
-				//if (debugmode) console.log("Looking for " + scenelist[lookfor] + " in " + currentscene);
-				if (scenelist[lookfor] != currentscene) // no self links
-				{
-					text = linkify(text,scenelist[lookfor]);
-				}
-			}
-			*/
 			text = megalinkify(text);
 		}
 		else
@@ -924,9 +939,10 @@ function parse_line(str) // main workhorse of the engine
 			if (debugmode) console.log('Not linkifying this line: '+text);
 		}
 		
+		// make onomatopoeias like "shake" animate
 		//text = coolify(text); // FIXME: what if inside an url? // BUGGY TODO
 	
-		if (isdialog)
+		if (isdialog) // handle character dialog with alternating left/right word bubbles
 		{
 			if (left_right == 'left') left_right = 'right'; else left_right = 'left';
 			text = "<span class='dialog"+ left_right + "'>" + text + "</span>";
@@ -972,6 +988,7 @@ function parse_text(manylines) // but don't update scene: used by GUI HUD
 	return output;
 }
 
+// switch scenes and parse new story+logic line by line
 function parse_scene(ascene)
 {
 	
@@ -1120,16 +1137,6 @@ function render(html,instant,cls)
 	animate_words(html);
 }
 
-// HUD (gui) elements
-var stats_div = null;
-var inventory_div = null;
-var map_div = null;
-var quests_div = null;
-// source code for HUD elements
-var stats_div_src = null;
-var inventory_div_src = null;
-var map_div_src = null;
-var quests_div_src = null;
 function update_hud()
 {
 	if (debugmode) console.log('update_hud');
@@ -1154,8 +1161,6 @@ function splitTags(str) // wonky - breaks on nested tags etc
 }
 */
 
-// back up previous text and clear out links
-var the_scene_so_far = ""; // html ripped every frame FIXME optimize
 function remember_story(removelinks) 
 {
 	if (removelinks)
@@ -1164,9 +1169,6 @@ function remember_story(removelinks)
 		the_scene_so_far = currentscene_div.innerHTML; 
 }
 
-var anim_str = "";
-var anim_num = 0;
-var anim_has_link = false;
 function animate_words(str)
 {
 	if (str)
@@ -2132,3 +2134,4 @@ go(firstscene);
 // load_game_state(); // buggy saved state
 ////////////////////////////////////////////////
 
+// } // end class constructor (if used on first line)
