@@ -73,6 +73,8 @@ img {
 	-moz-user-select: none;     /* Firefox all */
 	-ms-user-select: none;      /* IE 10+ */
 	user-select: none;          /* Likely future */      
+
+	background:rgba(0,255,0,0.2);
  }
 
 #current_scene {
@@ -89,6 +91,9 @@ img {
 	column-gap: 64px;
 	column-fill: auto;
 	*/
+
+	background:rgba(255,255,255,0.2);
+
 }
 
 
@@ -196,7 +201,14 @@ img {
 #current_choices a, .choice { display:inline-block; margin:0; padding:0; text-align:center; width:50%; padding-top:8px; padding-bottom:8px; text-decoration:none; color:red; }
 #current_choices a:hover, .choice:hover { color:blue; background:rgba(255,255,0,0.1); }
 
-#current_choices { margin:0px; padding:0px; margin-left:32px; margin-right:32px; }
+#current_choices { margin:0px; padding:0px; 
+	background:rgba(255,255,0,0.2);
+	position:absolute;
+	display:block;
+	bottom:0px;
+	height:128px;
+	width:100%;
+}
 
 #hudleft { position:absolute; top:0px; left:0px; width:20%; padding:0; margin:0; }
 #hudright { position:absolute; top:0px; right:0px; width:20%; padding:0; margin:0; }

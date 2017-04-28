@@ -4,6 +4,128 @@
     for further polishing - this file is currently not functional -->
 
 <textarea id="game_source" onfocus="" onblur="" onchange="" onpaste="" oninput="src_changed()">
+MUSHROOM CIRCLE
+[wildmushroomcircle.png]
+[1st][get 5 gold]
+[1st]Drops of morning dew glint in the light of a rising sun. You are outdoors, standing in the middle of a mushroom circle. 
+
+All around you are fresh mushrooms, the air smells sweet, and in the distance looms a huge walled fortress. You are cold, damp, and very lost.
+
+To your left stands a huge stone watchtower, and up ahead you see a stone path leading to the fortress.
+
+An old backpack is strapped to your back, but it feels empty.
+
+BACKPACK
+[1st] You remove your trusty canvas backpack and take stock of your current inventory.
+[roll = 1d4]
+[roll==1] You are holding
+[roll==2] Your backpack contains
+[roll==3] Your inventory consists of
+[roll==4] You currently have
+[invcount = 0]
+[shard?] [invcount++] [shard] crystal shard[s],
+[mushroom?] [invcount++] [mushroom] magic mushroom[s],
+[flower?] [invcount++] [flower] honeyflower[s],
+[invcount > 0] and
+[gold] gold coin[s].
+
+FRESH MUSHROOMS
+[1st][get mushroom]You decide to pick one of the mushrooms for later use.
+[else][get mushroom]You decide to pick another.
+You now have [mushroom] mushroom[s].
+
+STONE TOWER
+[wildtowerdoor.png]
+Gazing up, you notice that this is a belltower, perhaps used as a lookout post. Standing outside the fortress walls, 
+from the top you could see beyond the mountains. The door is locked. 
+
+[has key] You decide to use the silver key to unlock the belltower door.
+[else] You decide to look for a key in one of the buildings up ahead.
+
+STONE PATH
+[wildpathtobridge.png]
+The path is made of rough-cut stone, looks anicient, and leads to a drawbridge.
+To the left of the path are giant natural hot springs, bubbling quietly.
+
+In the distance you can see a crooked tower.
+By your feet are some unusual yellow flowers, still closed after a chilly night.
+
+YELLOW FLOWERS
+[1st][get flower]The flowers glisten with nectar and shine like honey. You take one.
+[else] One of the lowers has already been picked, and you decide to leave the others to grow free.
+
+HOT SPRINGS
+[wildhotsprings.png]
+The water in the springs is boililng hot, smells faintly of sulfur, and radiates a comforting warmth.
+You can see the stone tower behind you, just down the stone path, and the crooked tower up ahead.
+To your right is a fortress wall protected by a moat with a drawbridge.
+
+DRAWBRIDGE
+[maplebridgetocastle.png]
+The drawbridge is down, and before you stands the grand entrance to a huge fortress made of stone.
+You can see ornate gardens beyond the fortress gates, and behind you is a stone path.
+
+FORTRESS GATES
+[maplecastlegates.png]
+Beyond the fortress entrance lies a beautiful, lush garden. A waterfall cascades down a rock island,
+upon which a majestic knarled maple tree grows. It looks a thousand years old, and has tiny red leaves the colour of rust.
+
+LUSH GARDEN
+[maplegemgarden.png]
+You are standing in a beautiful garden, simple and clean. It seems timeless, like the season is always summer here.
+To your right is a glowing cluster of crystals by a small bridge, and on the right are some houses.
+
+CRYSTALS
+[maplegemcluster.png]
+In a corner of the garden grows a shimmering cluster of giant crystals.
+[has chisel] You could collect a shard with your chisel.
+[else] You decide to look for some sort of tool that would alow you to collect one.
+To your left is a small bridge that leads to the upper fortress, and behind you are the fortress gates and their lush garden.
+
+COLLECT A SHARD
+[1st] [get shard] You strike the crystal with your chisel and in a flash of sparks a shard chips off. You put it into your bakpack for safe keeping.
+[else] These crystals have already been harvested, and a shard is in your bakpack.
+
+SOME HOUSES
+[maplecastlepath.png]
+Beyond the lush garden is another bridge leading to what look like houses or administrative buildings.
+Tucked behind them, in a back yard, is a stone monument. To your left is a stairway leading to an upper courtyard.
+
+UPPER PILLARS
+[maplecastlepillars.png]
+At the topmost level of the fortress is a grand roofed entrance, with massive marble columns and a grand maplewood door.
+Below you is a courtyard with paths leading in all directions.
+On your left is an ancient tree so overgrown you just might be able to climb it.
+
+STONE MONUMENT
+[maplemonolith.png]
+An ancient marble monument, covered in carved symbols in a language you cannot read, stands resolutely behind some houses.
+
+COURTYARD
+[maplepathtostonehenge.png]
+A stone path splits four ways in the middle of a central courtyard.
+
+Behind you are stairs leading to a small bridge.
+To your right are some houses, part of the lower fortress garden district.
+
+Up ahead, surrounded by flowers and trees, stands a circle of stone monoliths.
+There is also a set of stairs here that lead to the upper fortress pillars.
+
+SMALL BRIDGE
+[maplestairstostonehenge.png]
+The inner courtyard of the fortress is just over the small bridge by the lush garden.
+A plain wooden bench sits here, offering respite for weary travellers.
+Beyond the trees the path continues up a set of steep stairs to upper courtyard.
+
+STONE MONOLITHS
+[maplestonehenge.png]
+At the far end of the upper courtyard stands a henge of stones, arranged in a circle.
+In the center is a rock with a hole harved into it that surely faces into the sunrise on just the right day.
+
+THE END
+You win!
+</textarea>
+
 
 <script src="libs/jszip.min.js"></script>
 

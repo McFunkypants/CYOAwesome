@@ -125,6 +125,7 @@ x visual novel mode (cls)
 var debugmode = true; // no console log if false
 var CLEARSCREEN_EACH_SCENE = false;
 var CLEARSCREEN_BEFORE_IMAGES = false;
+var LINKIFY_STORY_TEXT = false; // automagically add <a> to scene names
 var fastmode = false; // no text animation if we're editing
 var hurry = false; // user wants to fast fwd this scene
 
@@ -366,6 +367,7 @@ function boldify(haystack, needle) //
 
 function megalinkify(text) // look for all scenes and add links
 {
+	if (!LINKIFY_STORY_TEXT) return text;
 	for (var lookfor in scenelist) {
 		//if (debugmode) console.log("Looking for " + scenelist[lookfor] + " in " + currentscene);
 		if (scenelist[lookfor] != currentscene) // no self links
@@ -379,6 +381,7 @@ function megalinkify(text) // look for all scenes and add links
 // wrap case insensitively matching words in <a> tags
 function linkify(haystack, needle) // look for ONE scene
 {
+	if (!LINKIFY_STORY_TEXT) return haystack;
 	var prefix = "<a onclick=\"go('$1',this)\">";
 	var suffix = "</a>";
 	return (haystack+'').replace( new RegExp( "(" + preg_quote( needle ) + ")" , 'gi' ), prefix + "$1" + suffix );
@@ -483,6 +486,8 @@ function parse_line(str) // main workhorse of the engine
 	var item = "GOLD";
 	var isdialog = false;
 	var isbutton = false;
+	var run_code_now = true;
+
 	var do_not_linkify = false; // only true on images/sound so we don't linkify the html/url
 
 	if (str.startsWith('//'))
@@ -499,13 +504,13 @@ function parse_line(str) // main workhorse of the engine
 
 	if (str[0] == "\"") // starts with a quotation mark?
 	{
-		//if (debugmode) console.log('Dialog mode!');
+		if (debugmode) console.log('Dialog mode!');
 		isdialog = true;
 	}
 
 	if (str[0] == "-") // multiple choice list?
 	{
-		//if (debugmode) console.log('Button mode!');
+		if (debugmode) console.log('Button:');
 		str = str.slice(1).trim(); // strip off the dash
 		isbutton = true;
 	}
@@ -519,402 +524,406 @@ function parse_line(str) // main workhorse of the engine
 			incode = true;
 			code = "";
 		}
-		else if (str[i]==']')
+		else if (str[i]==']') // end of a code block! process if required
 		{
-			if (debugmode) console.log('---------------------------------------');
-			if (debugmode) console.log('['+code+']');
-
 			incode = false;
 			codeUP = code.toUpperCase();
-			//if (debugmode) console.log('GOT CODE: ' + codeUP); // TODO actually parse!
-			var code_clean = codeUP.replace('?',' ?');
-			code_clean = code_clean.replace('>',' > ');
-			code_clean = code_clean.replace('<',' < ');
-			code_clean = code_clean.replace('++',' + 1');
-			code_clean = code_clean.replace('--',' - 1');
-			code_clean = code_clean.replace('+',' + ');
-			code_clean = code_clean.replace('-',' - ');
-			code_clean = code_clean.replace('PICK UP',' GET ');
-			code_clean = code_clean.replace('!=',' NOT ');
-			code_clean = code_clean.replace('==',' EQUALS ');
-			code_clean = code_clean.replace('=',' = ');
-			code_clean = code_clean.replace('THE PLAYER','');
-			code_clean = code_clean.replace('DO ',''); // spaces inserted to avoid false matches eg "flower" contains "we"
-			code_clean = code_clean.replace('WE ','');
-			code_clean = code_clean.replace('YOU ','');
-			code_clean = code_clean.replace('WAS ','');
-			code_clean = code_clean.replace('IS ','');
-			code_clean = code_clean.replace('USER ','');
-			code_clean = code_clean.replace('PLAYER ','');
-			code_clean = code_clean.replace('IF ','');
-			code_clean = code_clean.replace('WHEN ','');
-			code_clean = code_clean.replace('DOES ','');
-			code_clean = code_clean.replace('ONLY ','');
-			code_clean = code_clean.replace(' TIMES','');
-			code_clean = code_clean.replace('!','');
-			code_clean = nodoublespaces(code_clean);
-			code_clean = code_clean.trim();
-			
-			var code_split = code_clean.split(' ');
-			var code_token_count = code_split.length;
-			
-			// debug the command after string cleaning
-			if (debugmode && code_split.length>1) console.log('['+code_split[0]+','+code_split[1]+','+code_split[2]+','+code_split[3]+']');
-
-			// THREE WORDS OR MORE
-			if (code_token_count > 2) // "GET 10 GOLD", "has > 5 gold", "has 5 gold ?", "has a gold"
+			if (debugmode) console.log('['+codeUP+']');
+			if (!isbutton)
 			{
-				if (debugmode) console.log('code_token_count '+code_token_count);
-				verb = code_split[0];
-			
-				quantity = quantify(code_split[1]);
-				if (code_split[1]=='A') quantity = 1; 
-				if (code_split[1]=='AN') quantity = 1;
-				if (code_split[1]=='THE') quantity = 1;
-				if (code_split[1]=='ONE') quantity = 1;
-				if (code_split[1]=='NO') quantity = 0;
 
-				item = code_split[2];
+				//if (debugmode) console.log('GOT CODE: ' + codeUP); // TODO actually parse!
+				var code_clean = codeUP.replace('?',' ?');
+				code_clean = code_clean.replace('>',' > ');
+				code_clean = code_clean.replace('<',' < ');
+				code_clean = code_clean.replace('++',' + 1');
+				code_clean = code_clean.replace('--',' - 1');
+				code_clean = code_clean.replace('+',' + ');
+				code_clean = code_clean.replace('-',' - ');
+				code_clean = code_clean.replace('PICK UP',' GET ');
+				code_clean = code_clean.replace('!=',' NOT ');
+				code_clean = code_clean.replace('==',' EQUALS ');
+				code_clean = code_clean.replace('=',' = ');
+				code_clean = code_clean.replace('THE PLAYER','');
+				code_clean = code_clean.replace('DO ',''); // spaces inserted to avoid false matches eg "flower" contains "we"
+				code_clean = code_clean.replace('WE ','');
+				code_clean = code_clean.replace('YOU ','');
+				code_clean = code_clean.replace('WAS ','');
+				code_clean = code_clean.replace('IS ','');
+				code_clean = code_clean.replace('USER ','');
+				code_clean = code_clean.replace('PLAYER ','');
+				code_clean = code_clean.replace('IF ','');
+				code_clean = code_clean.replace('WHEN ','');
+				code_clean = code_clean.replace('DOES ','');
+				code_clean = code_clean.replace('ONLY ','');
+				code_clean = code_clean.replace(' TIMES','');
+				code_clean = code_clean.replace('!','');
+				code_clean = nodoublespaces(code_clean);
+				code_clean = code_clean.trim();
+				
+				var code_split = code_clean.split(' ');
+				var code_token_count = code_split.length;
+				
+				// debug the command after string cleaning
+				if (debugmode && code_split.length>1) console.log('['+code_split[0]+','+code_split[1]+','+code_split[2]+','+code_split[3]+']');
 
-				// [HP EQUALS 5 ?]
-				if (code_split[1] == 'EQUALS')
+				// THREE WORDS OR MORE
+				if (code_token_count > 2) // "GET 10 GOLD", "has > 5 gold", "has 5 gold ?", "has a gold"
 				{
-					if (debugmode) console.log('eq');
-					verb = 'HAS';
-					item = code_split[0];
-					quantity = quantify(code_split[2]);
-				}
-
-				// [HP 100 ?]
-				if (code_split[2] == '?')
-				{
-					if (debugmode) console.log('?');
-					verb = 'HAS';
-					item = code_split[0];
+					// if (debugmode) console.log('code_token_count '+code_token_count);
+					verb = code_split[0];
+				
 					quantity = quantify(code_split[1]);
-				}
+					if (code_split[1]=='A') quantity = 1; 
+					if (code_split[1]=='AN') quantity = 1;
+					if (code_split[1]=='THE') quantity = 1;
+					if (code_split[1]=='ONE') quantity = 1;
+					if (code_split[1]=='NO') quantity = 0;
 
-				// handle [key + 1]
-				if (code_split[1] == '+')
-				{
-					if (debugmode) console.log('+');
-					verb = 'GET';
-					quantity = quantify(code_split[2]);
-					item = code_split[0];
-				}
-				if (code_split[1] == '-')
-				{
-					if (debugmode) console.log('-');
-					verb = 'DROP';
-					quantity = quantify(code_split[2]);
-					item = code_split[0];
-				}
-				// set is different from adding
-				if (code_split[1] == '=')
-				{
-					if (debugmode) console.log('=');
-					verb = 'SET';
-					quantity = quantify(code_split[2]);
-					item = code_split[0];
-				}
-				if (code_split[1] == 'NOT')
-				{
-					if (debugmode) console.log('not');
-					verb = 'NOT';
-					quantity = quantify(code_split[2]);
-					item = code_split[0];
-				}
-				
-				if (code_split[1] == '>')
-				{
-					if (debugmode) console.log('>');
-					verb = 'HASMORETHAN';
-					quantity = quantify(code_split[2]);
-					item = code_split[0];
-				}
-				else if (code_split[1] == '<')
-				{
-					if (debugmode) console.log('<');
-					verb = 'HASLESSTHAN';
-					quantity = quantify(code_split[2]);
-					item = code_split[0];
-				}
-				else if (code_split[3] == '?') // eg [gold = 5 ?]
-				{
-					if (debugmode) console.log('? pos 3');
-					verb = 'HAS';
-					item = code_split[0];
-					quantity = quantify(code_split[2]);
-				}
+					item = code_split[2];
 
-				if (item == 'HAS') // [has > 5 gold]
-				{
-					item = code_split[3];
-				}
-			}
-			// TWO WORDS
-			else if (code_token_count == 2) // "get gold?", "has key", "saw boat", "is angry", 'no key'
-			{
-				if (debugmode) console.log('code_token_count '+code_token_count);
-				
-				verb = code_split[0];
-				quantity = 1;
-				item = code_split[1];
-
-				if (code_split[0] == 'NO')
-				{
-					verb = 'HAS';
-					quantity = 0;
-					item = code_split[1];
-				}
-
-				if (code_split[1] == '?') // eg [gold ?]
-				{
-					if (debugmode) console.log('?');
-					verb = 'HAS';
-					item = code_split[0];
-					quantity = 1;
-				}
-				
-			}
-			// ONE WORD
-			else if (code_token_count == 1) // "1st" "else" "KEY" or "GOLD+1" or "FUN++" or "KEY?" or "key>5"
-			{
-				if (debugmode) console.log('code_token_count '+code_token_count);
-
-				if (codeUP.endsWith("?"))
-				{
-					if (debugmode) console.log("Question mark means verb is HAS");
-					verb = "HAS";
-				}
-				else
-				{	
-					verb = code_split[0]; // 1st
-				}
-				quantity = 1;
-				item = code_split[0]; 
-			}
-
-			if (code_token_count==1)
-			{
-				if (verb == '1ST')
-				{
-					if (debugmode) console.log('1st');
-					code_result = (visited_scenes[currentscene] <= 1);
-					if (debugmode) console.log(currentscene + " visits: " + visited_scenes[currentscene] + " so code_result=" + code_result);
-					skip = !code_result;
-				}
-				/*
-				else if (!skip && (
-					(verb.includes("D")) && 
-					((IsNumeric(verb[0])) || // "3d6"
-					(IsNumeric(verb[1]))))) // "d20"
-				{
-					var num = 1;
-					var die = 6;
-					if (debugmode) console.log("Dice roll: " + verb);
-					var chunk = verb.split('D');
-					num = chunk[0];
-					die = chunk[1];
-					if (!num) num = 1; // eg d6 gets us a null and a 6
-					if (debugmode) console.log('Rolling ' + num + ' d' + die);
-					var result = 0;
-					var nextroll = 0;
-					for (var roll = 0; roll < num; roll++)
+					// [HP EQUALS 5 ?]
+					if (code_split[1] == 'EQUALS')
 					{
-						nextroll = random_int_range_inclusive(1,die);
-						result += nextroll;
-						// we could use unicode
-						//Die face-1	⚀	U+2680	&#9856;	
-						//Die face-2	⚁	U+2681	&#9857;	
-						//Die face-3	⚂	U+2682	&#9858;	
-						//Die face-4	⚃	U+2683	&#9859;	
-						//Die face-5	⚄	U+2684	&#9860;	
-						//Die face-6	⚅	U+2685	&#9861;	
-						// great images
-						//if (die==6)	text += "<div class='dice"+nextroll+"'></div>";
-						if (die==6) text += "&#" + (9855 + nextroll) + "; ";
+						if (debugmode) console.log('eq');
+						verb = 'HAS';
+						item = code_split[0];
+						quantity = quantify(code_split[2]);
 					}
-					text += " = " +result;
-				}
-				*/
-				else if (!skip && (
-					endsWith(codeUP,".PNG") ||
-					endsWith(codeUP,".JPG") ||
-					endsWith(codeUP,".GIF")
-					))
-				{
-					if (debugmode) console.log("Adding image: " + code + " cls=" + CLEARSCREEN_BEFORE_IMAGES);
-					if (CLEARSCREEN_BEFORE_IMAGES) clearscreen(); // fixme does this bug stuff?
-					text = text + "<img src='img/" + code + "'>";
-					do_not_linkify = true;
-					verb = "";
-					item = "";
-					quantity = "";
-				}
-				else if (!skip && (
-					endsWith(codeUP,".MP3") ||
-					endsWith(codeUP,".WAV") ||
-					endsWith(codeUP,".OGG") ||
-					endsWith(codeUP,".WEBM")
-					))
-				{
-					var sfx = code.slice(0, -4); // remove the extension
-					if (debugmode) console.log("Playing sound: " + sfx);
-					soundSystem.play(sfx);
-					do_not_linkify = true;
-					verb = "";
-					item = "";
-					quantity = "";
-				}
-				else if (codeUP == 'S') // quantity suffix from previous inventory insert
-				{
-					text += S_PLURAL; // a global that is either "" or "s" // TODO: sometimes should be "es"?
-					verb = "";
-				}
-				else if (codeUP == 'ELSE')
-				{
-					if (debugmode) console.log('else');
-					// do nothing in this state
-				}
-				else // regular single word is assume an INVENTORY quantity...
-				{
-					if (debugmode) console.log("quantity="+inventory[item]);
-					if (inventory[item]!=undefined) // insert quantity
+
+					// [HP 100 ?]
+					if (code_split[2] == '?')
 					{
-						text += int_to_words(inventory[item]);
-						if (inventory[item] == 1)
-							S_PLURAL = "";
-						else
-							S_PLURAL = "s";
-						verb = "";
+						if (debugmode) console.log('?');
+						verb = 'HAS';
+						item = code_split[0];
+						quantity = quantify(code_split[1]);
+					}
+
+					// handle [key + 1]
+					if (code_split[1] == '+')
+					{
+						if (debugmode) console.log('+');
+						verb = 'GET';
+						quantity = quantify(code_split[2]);
+						item = code_split[0];
+					}
+					if (code_split[1] == '-')
+					{
+						if (debugmode) console.log('-');
+						verb = 'DROP';
+						quantity = quantify(code_split[2]);
+						item = code_split[0];
+					}
+					// set is different from adding
+					if (code_split[1] == '=')
+					{
+						if (debugmode) console.log('=');
+						verb = 'SET';
+						quantity = quantify(code_split[2]);
+						item = code_split[0];
+					}
+					if (code_split[1] == 'NOT')
+					{
+						if (debugmode) console.log('not');
+						verb = 'NOT';
+						quantity = quantify(code_split[2]);
+						item = code_split[0];
+					}
+					
+					if (code_split[1] == '>')
+					{
+						if (debugmode) console.log('>');
+						verb = 'HASMORETHAN';
+						quantity = quantify(code_split[2]);
+						item = code_split[0];
+					}
+					else if (code_split[1] == '<')
+					{
+						if (debugmode) console.log('<');
+						verb = 'HASLESSTHAN';
+						quantity = quantify(code_split[2]);
+						item = code_split[0];
+					}
+					else if (code_split[3] == '?') // eg [gold = 5 ?]
+					{
+						if (debugmode) console.log('? pos 3');
+						verb = 'HAS';
+						item = code_split[0];
+						quantity = quantify(code_split[2]);
+					}
+
+					if (item == 'HAS') // [has > 5 gold]
+					{
+						item = code_split[3];
+					}
+				}
+				// TWO WORDS
+				else if (code_token_count == 2) // "get gold?", "has key", "saw boat", "is angry", 'no key'
+				{
+					if (debugmode) console.log('code_token_count '+code_token_count);
+					
+					verb = code_split[0];
+					quantity = 1;
+					item = code_split[1];
+
+					if (code_split[0] == 'NO')
+					{
+						verb = 'HAS';
+						quantity = 0;
+						item = code_split[1];
+					}
+
+					if (code_split[1] == '?') // eg [gold ?]
+					{
+						if (debugmode) console.log('?');
+						verb = 'HAS';
+						item = code_split[0];
+						quantity = 1;
+					}
+					
+				}
+				// ONE WORD
+				else if (code_token_count == 1) // "1st" "else" "KEY" or "GOLD+1" or "FUN++" or "KEY?" or "key>5"
+				{
+					if (debugmode) console.log('code_token_count '+code_token_count);
+
+					if (codeUP.endsWith("?"))
+					{
+						if (debugmode) console.log("Question mark means verb is HAS");
+						verb = "HAS";
 					}
 					else
+					{	
+						verb = code_split[0]; // 1st
+					}
+					quantity = 1;
+					item = code_split[0]; 
+				}
+
+				if (code_token_count==1)
+				{
+					if (verb == '1ST')
 					{
-						text += "no";
-						S_PLURAL = "s";
+						if (debugmode) console.log('1st');
+						code_result = (visited_scenes[currentscene] <= 1);
+						if (debugmode) console.log(currentscene + " visits: " + visited_scenes[currentscene] + " so code_result=" + code_result);
+						skip = !code_result;
+					}
+					/*
+					else if (!skip && (
+						(verb.includes("D")) && 
+						((IsNumeric(verb[0])) || // "3d6"
+						(IsNumeric(verb[1]))))) // "d20"
+					{
+						var num = 1;
+						var die = 6;
+						if (debugmode) console.log("Dice roll: " + verb);
+						var chunk = verb.split('D');
+						num = chunk[0];
+						die = chunk[1];
+						if (!num) num = 1; // eg d6 gets us a null and a 6
+						if (debugmode) console.log('Rolling ' + num + ' d' + die);
+						var result = 0;
+						var nextroll = 0;
+						for (var roll = 0; roll < num; roll++)
+						{
+							nextroll = random_int_range_inclusive(1,die);
+							result += nextroll;
+							// we could use unicode
+							//Die face-1	⚀	U+2680	&#9856;	
+							//Die face-2	⚁	U+2681	&#9857;	
+							//Die face-3	⚂	U+2682	&#9858;	
+							//Die face-4	⚃	U+2683	&#9859;	
+							//Die face-5	⚄	U+2684	&#9860;	
+							//Die face-6	⚅	U+2685	&#9861;	
+							// great images
+							//if (die==6)	text += "<div class='dice"+nextroll+"'></div>";
+							if (die==6) text += "&#" + (9855 + nextroll) + "; ";
+						}
+						text += " = " +result;
+					}
+					*/
+					else if (!skip && (
+						endsWith(codeUP,".PNG") ||
+						endsWith(codeUP,".JPG") ||
+						endsWith(codeUP,".GIF")
+						))
+					{
+						if (debugmode) console.log("Adding image: " + code + " cls=" + CLEARSCREEN_BEFORE_IMAGES);
+						if (CLEARSCREEN_BEFORE_IMAGES) clearscreen(); // fixme does this bug stuff?
+						text = text + "<img src='img/" + code + "'>";
+						do_not_linkify = true;
+						verb = "";
+						item = "";
+						quantity = "";
+					}
+					else if (!skip && (
+						endsWith(codeUP,".MP3") ||
+						endsWith(codeUP,".WAV") ||
+						endsWith(codeUP,".OGG") ||
+						endsWith(codeUP,".WEBM")
+						))
+					{
+						var sfx = code.slice(0, -4); // remove the extension
+						if (debugmode) console.log("Playing sound: " + sfx);
+						soundSystem.play(sfx);
+						do_not_linkify = true;
+						verb = "";
+						item = "";
+						quantity = "";
+					}
+					else if (codeUP == 'S') // quantity suffix from previous inventory insert
+					{
+						text += S_PLURAL; // a global that is either "" or "s" // TODO: sometimes should be "es"?
 						verb = "";
 					}
-				}
+					else if (codeUP == 'ELSE')
+					{
+						if (debugmode) console.log('else');
+						// do nothing in this state
+					}
+					else // regular single word is assume an INVENTORY quantity...
+					{
+						if (debugmode) console.log("quantity="+inventory[item]);
+						if (inventory[item]!=undefined) // insert quantity
+						{
+							text += int_to_words(inventory[item]);
+							if (inventory[item] == 1)
+								S_PLURAL = "";
+							else
+								S_PLURAL = "s";
+							verb = "";
+						}
+						else
+						{
+							text += "no";
+							S_PLURAL = "s";
+							verb = "";
+						}
+					}
 
-			} // is 1 token long
+				} // is 1 token long
 
-			if (isNaN(quantity)) quantity = 1;
+				if (isNaN(quantity)) quantity = 1;
 
-			//////////////////////////////////////// Now execute the command
+				run_code_now = !isbutton; // just remember the scene name to goto when we click
 
-			if (verb!="" && debugmode) console.log('verb:'+verb+' quantity:'+quantity+' item:'+item);
-
-			if (!skip && (verb == 'SET'))
-			{
-				if (debugmode) console.log('setting');
-				inventory[item] = quantity;
-				if (debugmode) console.log('(we have exactly '+inventory[item]+' '+item+')');
-			}
-
-			if (!skip && (verb == 'GET' || verb == 'GETS' || verb == 'TAKE' || verb == 'TAKES' || verb == 'GRAB' || verb == 'OBTAIN'))
-			{
-				if (debugmode) console.log('getting');
-				if (!inventory[item]) inventory[item] = 0; // avoid undefined
-				inventory[item] += quantity;
-				if (debugmode) console.log('(we now have '+inventory[item]+' '+item+')');
-			}
-
-			if (!skip && (verb == 'PUT' || verb == 'DROP' || verb == 'LOSE' || verb == 'GIVE' || verb == 'DESTROY' || verb == 'DELETE' || verb == 'SUBTRACT'))
-			{
-				if (debugmode) console.log('dropping');
-				if (!inventory[item]) inventory[item] = 0; // avoid undefined
-				inventory[item] -= quantity;
-				if (debugmode) console.log('(we now have '+inventory[item]+' '+item+')');
-			}
-
-			if (!skip && (verb == 'NOT'))
-			{
-				if (debugmode) console.log('not');
-				if (inventory[item] != quantity)
+				if (run_code_now)
 				{
-					if (debugmode) console.log('(Yes, we do not have '+quantity+' '+item+', we have '+inventory[item]+')');
-					code_result = true;
-				}
-				else
-				{
-					if (debugmode) console.log('(No, we do have '+quantity+' '+item+', we have '+inventory[item]+')');
-					code_result = false;
-				}
-				skip = !code_result;
-			}
+					if (verb!="" && debugmode) console.log('verb:'+verb+' quantity:'+quantity+' item:'+item);
 
-			if (!skip && (verb == 'HASLESSTHAN'))
-			{
-				if (inventory[item] < quantity)
-				{
-					if (debugmode) console.log('(Yes, we have less than '+quantity+' '+item+', we have '+inventory[item]+')');
-					code_result = true;
-				}
-				else
-				{
-					if (debugmode) console.log('(No, we do not have less than '+quantity+' '+item+', we have '+inventory[item]+')');
-					code_result = false;
-				}
-				skip = !code_result;
-			}
+					if (!skip && (verb == 'SET'))
+					{
+						if (debugmode) console.log('setting');
+						inventory[item] = quantity;
+						if (debugmode) console.log('(we have exactly '+inventory[item]+' '+item+')');
+					}
 
-			if (!skip && (verb == 'HASMORETHAN'))
-			{
-				if (inventory[item] > quantity)
-				{
-					if (debugmode) console.log('(Yes, we have more than '+quantity+' '+item+', we have '+inventory[item]+')');
-					code_result = true;
-				}
-				else
-				{
-					if (debugmode) console.log('(No, we do not have more than '+quantity+' '+item+', we have '+inventory[item]+')');
-					code_result = false;
-				}
-				skip = !code_result;
-			}
+					if (!skip && (verb == 'GET' || verb == 'GETS' || verb == 'TAKE' || verb == 'TAKES' || verb == 'GRAB' || verb == 'OBTAIN'))
+					{
+						if (debugmode) console.log('getting');
+						if (!inventory[item]) inventory[item] = 0; // avoid undefined
+						inventory[item] += quantity;
+						if (debugmode) console.log('(we now have '+inventory[item]+' '+item+')');
+					}
 
-			if (!skip && (verb == 'HAS' || verb == 'IS' || verb == 'GOT' || verb == 'WAS' || verb == 'FOUND' || verb == 'HOLDING' || verb == 'HAVE'))
-			{
-				if (debugmode) console.log('has');
-				if (inventory[item] == quantity) // FIXME: what about has gold? we need ANYAMOUNT quantity
-				{
-					if (debugmode) console.log('(Yes, we have '+quantity+' '+item+')');
-					code_result = true;
-				}
-				else
-				{
-					if (debugmode) console.log('(No, we do not have '+quantity+' '+item+', we have '+inventory[item]+')');
-					code_result = false;
-				}
-				skip = !code_result;
-			}
+					if (!skip && (verb == 'PUT' || verb == 'DROP' || verb == 'LOSE' || verb == 'GIVE' || verb == 'DESTROY' || verb == 'DELETE' || verb == 'SUBTRACT'))
+					{
+						if (debugmode) console.log('dropping');
+						if (!inventory[item]) inventory[item] = 0; // avoid undefined
+						inventory[item] -= quantity;
+						if (debugmode) console.log('(we now have '+inventory[item]+' '+item+')');
+					}
 
-			if (!skip && (verb == 'NO')) // do we NOT have this in our inventory?
-			{
-				if (debugmode) console.log('no');
-				if (inventory[item] != 0) //quantity)
-				{
-					if (debugmode) console.log('(No, we DO have some '+item+', we have '+inventory[item]+')');
-					code_result = false;
-				}
-				else
-				{
-					if (debugmode) console.log('(Yes, we do NOT have some '+item+')');
-					code_result = true;
-				}
-				skip = !code_result;
-			}
+					if (!skip && (verb == 'NOT'))
+					{
+						if (debugmode) console.log('not');
+						if (inventory[item] != quantity)
+						{
+							if (debugmode) console.log('(Yes, we do not have '+quantity+' '+item+', we have '+inventory[item]+')');
+							code_result = true;
+						}
+						else
+						{
+							if (debugmode) console.log('(No, we do have '+quantity+' '+item+', we have '+inventory[item]+')');
+							code_result = false;
+						}
+						skip = !code_result;
+					}
 
-			if (codeUP == 'ELSE')
-			{
-				if (debugmode) console.log('else');
-				skip = code_result;
-				if (debugmode) console.log('skip='+skip);
-			}
-							
-			// if (debugmode) console.log('code_result='+code_result);
-			
+					if (!skip && (verb == 'HASLESSTHAN'))
+					{
+						if (inventory[item] < quantity)
+						{
+							if (debugmode) console.log('(Yes, we have less than '+quantity+' '+item+', we have '+inventory[item]+')');
+							code_result = true;
+						}
+						else
+						{
+							if (debugmode) console.log('(No, we do not have less than '+quantity+' '+item+', we have '+inventory[item]+')');
+							code_result = false;
+						}
+						skip = !code_result;
+					}
+
+					if (!skip && (verb == 'HASMORETHAN'))
+					{
+						if (inventory[item] > quantity)
+						{
+							if (debugmode) console.log('(Yes, we have more than '+quantity+' '+item+', we have '+inventory[item]+')');
+							code_result = true;
+						}
+						else
+						{
+							if (debugmode) console.log('(No, we do not have more than '+quantity+' '+item+', we have '+inventory[item]+')');
+							code_result = false;
+						}
+						skip = !code_result;
+					}
+
+					if (!skip && (verb == 'HAS' || verb == 'IS' || verb == 'GOT' || verb == 'WAS' || verb == 'FOUND' || verb == 'HOLDING' || verb == 'HAVE'))
+					{
+						if (debugmode) console.log('has');
+						if (inventory[item] == quantity) // FIXME: what about has gold? we need ANYAMOUNT quantity
+						{
+							if (debugmode) console.log('(Yes, we have '+quantity+' '+item+')');
+							code_result = true;
+						}
+						else
+						{
+							if (debugmode) console.log('(No, we do not have '+quantity+' '+item+', we have '+inventory[item]+')');
+							code_result = false;
+						}
+						skip = !code_result;
+					}
+
+					if (!skip && (verb == 'NO')) // do we NOT have this in our inventory?
+					{
+						if (debugmode) console.log('no');
+						if (inventory[item] != 0) //quantity)
+						{
+							if (debugmode) console.log('(No, we DO have some '+item+', we have '+inventory[item]+')');
+							code_result = false;
+						}
+						else
+						{
+							if (debugmode) console.log('(Yes, we do NOT have some '+item+')');
+							code_result = true;
+						}
+						skip = !code_result;
+					}
+
+					if (codeUP == 'ELSE')
+					{
+						if (debugmode) console.log('else');
+						skip = code_result;
+						if (debugmode) console.log('skip='+skip);
+					}
+									
+					// if (debugmode) console.log('code_result='+code_result);
+				} // if run_code_now
+			} // if !isbutton
 		} // end if this char was ]
 		else if (incode) // more code incoming
 		{
@@ -930,13 +939,13 @@ function parse_line(str) // main workhorse of the engine
 	{
 		// search for any scenes to link automagically
 		// unless we are in a choice button
-		if (!(isbutton && code_clean != undefined) && do_not_linkify==false)
+		if (!(isbutton && code_clean != undefined) && (do_not_linkify==false) && LINKIFY_STORY_TEXT)
 		{
 			text = megalinkify(text);
 		}
 		else
 		{
-			if (debugmode) console.log('Not linkifying this line: '+text);
+			//if (debugmode) console.log('Not linkifying this line: '+text);
 		}
 		
 		// make onomatopoeias like "shake" animate
@@ -950,7 +959,7 @@ function parse_line(str) // main workhorse of the engine
 		
 		if (isbutton) // links to the scene with name [code]
 		{
-			if (code_clean != undefined)
+			if (codeUP != undefined)
 			{
 				text = "<a class='choice' onclick=\"go('" + codeUP + "',this)\">" + text + "</a>";
 			}
@@ -1090,6 +1099,9 @@ function render(html,instant,cls)
 		}
 	}
 	
+
+	// we could detect dead ends, but in CYOA isbutton mode or !LINKIFY_STORY_TEXT the scene html may have no links
+	/*
 	if (!scene_has_links && !currentscene_div.innerHTML.includes("<a")) // FIXME: wonky: x2 adds links to links!
 	{
 		if (debugmode) console.log("STORY ERROR: DEAD END DETECTED!");
@@ -1106,19 +1118,17 @@ function render(html,instant,cls)
 			html += "<p><a onclick=\"go('" + second_last_cls_scene + "',this)\">Continue...</a></p>"
 		else
 			html += "<p><a onclick=\"go('" + last_cls_scene + "',this)\">Continue...</a></p>"
-		
 
-		/* buggy
-		html += "<p>Nearby locations: ";
-		html += linkify(last_item(visited_scenes)) + ", ";
-		html += linkify(last_item(visited_scenes,1)) + ", ";
-		html += linkify(last_item(visited_scenes,2)) + ", ";
-		html += linkify(last_item(visited_scenes,3)) + ".";
-		html += "</p>";
-		*/
+		// idea: automatically link nearby scenes... buggy
+		//html += "<p>Nearby locations: ";
+		//html += linkify(last_item(visited_scenes)) + ", ";
+		//html += linkify(last_item(visited_scenes,1)) + ", ";
+		//html += linkify(last_item(visited_scenes,2)) + ", ";
+		//html += linkify(last_item(visited_scenes,3)) + ".";
+		//html += "</p>";
 
 	}
-
+	*/
 	update_hud();
 
 	if (instant) 
