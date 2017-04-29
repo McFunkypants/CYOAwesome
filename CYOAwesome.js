@@ -487,6 +487,7 @@ function parse_line(str) // main workhorse of the engine
 	var isdialog = false;
 	var isbutton = false;
 	var run_code_now = true;
+	var pendingDialogFaceIMG = ''; // NPC face images
 
 	var do_not_linkify = false; // only true on images/sound so we don't linkify the html/url
 
@@ -752,7 +753,16 @@ function parse_line(str) // main workhorse of the engine
 					{
 						if (debugmode) console.log("Adding image: " + code + " cls=" + CLEARSCREEN_BEFORE_IMAGES);
 						if (CLEARSCREEN_BEFORE_IMAGES) clearscreen(); // fixme does this bug stuff?
-						text = text + "<img src='img/" + code + "'>";
+						
+						// special case: inside dialog means a VN style NPC face
+						if (isdialog)
+						{
+							pendingDialogFaceIMG = "<img src='img/" + code + "'>";
+						}
+						else // normal in-text image full size
+						{
+							text = text + "<img src='img/" + code + "'>";
+						}
 						do_not_linkify = true;
 						verb = "";
 						item = "";
@@ -955,6 +965,16 @@ function parse_line(str) // main workhorse of the engine
 		{
 			if (left_right == 'left') left_right = 'right'; else left_right = 'left';
 			text = "<span class='dialog"+ left_right + "'>" + text + "</span>";
+
+			// special case: an img inside a dialog means a VN style "face"
+			// FIXME: I don't like doing it this way: maybe define pos of an img in code?
+			// eg at front or at end of a line? [IMG] "quote" [IMG]
+			if (pendingDialogFaceIMG)
+			{
+				if (debugmode) console.log('Changing dialog face on the '+left_right+' to ' + pendingDialogFaceIMG);
+				document.getElementById('face_'+left_right).innerHTML = pendingDialogFaceIMG;
+				pendingDialogFaceIMG = '';
+			}
 		}
 		
 		if (isbutton) // links to the scene with name [code]
@@ -971,7 +991,7 @@ function parse_line(str) // main workhorse of the engine
 			}
 			currentchoices_div.innerHTML += text;
 
-			if (debugmode) console.log('choice html is ' + currentchoices_div.innerHTML);
+			//if (debugmode) console.log('choice html is ' + currentchoices_div.innerHTML);
 			
 			return "";
 		}

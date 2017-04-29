@@ -16,9 +16,14 @@
 <textarea id="game_source">
 INTRO
 
-"It was a dark and stormy night..."
+// Minimal VN style example
+// made to match Chris Markle's mockup
+// Public domain images by DasBilligeAlien
+// https://opengameart.org/content/visual-novel-tutorial-set
 
-"What was so stormy about it?"
+"It was a dark and stormy night..." [guy.png] 
+
+"What was so stormy about it?" [gal.png]
 
 "The passionate kiss!"
 
@@ -66,9 +71,11 @@ We lived happily every after. THE END.
 </textarea>
 
 <div id='game' onclick='hurryup()'>
+	<div id='face_left'></div>
+	<div id='face_right'></div>
 	<div id='story_so_far'></div>
 	<div id='current_scene'></div>
-	<div id='current_choices'></div>
+	<div id='choice_container'><div id='current_choices'></div></div>
 	<div id='swingmeter'>
 		<div id='swingtoolow'></div>
 		<div id='swinggoodlow'></div>

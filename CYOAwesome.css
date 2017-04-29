@@ -12,7 +12,7 @@ br { clear:both; }
 
 div, textarea, input, a {
 	font-family: 'Special Elite', Serif;
-	font-size:24px;
+	font-size:22px;
 	line-height:28px;
 	color:#333333;
 	padding:32px; 
@@ -30,9 +30,11 @@ input {
 p {
 	padding:0;
 	margin:0;
+	/*
 	margin-bottom:24px;
 	margin-top:24px;
 	margin-right:32px; 
+	*/
 }
 
 a {
@@ -94,7 +96,7 @@ img {
 	column-fill: auto;
 	*/
 
-	background:rgba(255,255,255,0.2);
+	OMIT-DEBUG-background:rgba(255,255,255,0.2);
 
 }
 
@@ -199,7 +201,7 @@ img {
 .menubutton { margin-left:16px; } 
 
 .dialogleft, .dialogright { display:inline-block; color:#226622; text-align:left; padding:24px; background:white; border-radius:8px; }
-.dialogright { color:#333388; text-align:right; float:right; clear:both; overflow:auto; }
+.dialogright { color:#333388; text-align:right; float:right; clear:both; overflow:auto; margin-right:0px; }
 .dialogright::after { background:red; height:16px; }
 
 #current_choices a, .choice { display:inline-block; margin:0; padding:0; text-align:center; width:50%; padding-top:24px; padding-bottom:24px; text-decoration:none; color:red; }
@@ -207,10 +209,17 @@ img {
 
 #current_choices { margin:0px; padding:0px; 
 	background:rgba(255,255,0,0.2);
-	position:absolute;
 	display:block;
+	width:100%;
+	max-width:960px;
+	margin:auto;
+}
+
+#choice_container {
+	position:absolute;
 	bottom:0px;
 	width:100%;
+	padding:0; margin:0;
 }
 
 #hudleft { position:absolute; top:0px; left:0px; width:20%; padding:0; margin:0; }
@@ -285,3 +294,31 @@ position:absolute; bottom:0px; left:0px; padding:0; margin:0;
 width:1px; height:24px; background:white; border-right:1px solid black; 
 opacity:0.4;
 }
+
+#face_left {
+	position:absolute;
+	display:block;
+	margin:0; padding:0;
+	outline:none;
+	left:0px;
+	bottom:0px;
+	z-index:-1;
+	width:256px;
+	min-width:20%; 
+	max-width:50%; 
+}
+
+#face_right {
+	position:absolute;
+	display:block;
+	margin:0; padding:0;
+	outline:none;
+	right:0px;
+	bottom:0px;
+	z-index:-1;
+	width:256px;
+	min-width:20%; 
+	max-width:50%; 
+}
+
+#face_right img, #face_left img { width:100%; margin:0; padding:0; border:0; outline:0; }
