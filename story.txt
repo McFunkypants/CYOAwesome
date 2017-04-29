@@ -1,0 +1,54 @@
+INTRO
+
+// Minimal VN style example
+// made to match Chris Markle's mockup
+// Public domain images by DasBilligeAlien
+// https://opengameart.org/content/visual-novel-tutorial-set
+
+"It was a dark and stormy night..." [guy.png] 
+
+"What was so stormy about it?" [gal.png]
+
+"The passionate kiss!"
+
+"What?!"
+
+I started to wonder if I should try to make her feel jealous?
+She'd totally deserve it after last Thursday...
+Then again, maybe I should try to smooth things over.
+
+- I think we may be in love! [THE FIGHT]
+- It wasn't JUST a kiss! [THE FIGHT]
+- It was nothing. [THE INTERROGATION]
+- Just kidding! There was no kiss. [HAPPY ENDING]
+
+THE FIGHT
+
+"How DARE you! I thought we were meant to be?"
+
+She left me. GAME OVER.
+
+- Restart [INTRO]
+
+THE INTERROGATION
+
+"What EXACTLY do you mean by that?"
+
+I could see from her eyes she meant business.
+It was time for me to tell her the truth.
+
+- I love you, and only you. [HAPPY ENDING]
+- I kiss other people all the time! [THE FIGHT]
+
+HAPPY ENDING
+
+"Oh, you rascal!"
+
+"No, seriously, you are the only one for me. Never worry."
+
+"I'm so lucky!"
+
+We lived happily every after. THE END.
+
+- Restart [INTRO]
+

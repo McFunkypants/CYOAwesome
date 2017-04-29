@@ -181,7 +181,7 @@ var anim_has_link = false;
 // back up previous text and clear out links
 var the_scene_so_far = ""; // html ripped every frame TODO: optimize
 
-function init()
+function init(story_txt)
 {
 	if (debugmode) console.log("------------------------------------------------");
 	if (debugmode) console.log("CYOAwesome v0.4 by Christer McFunkypants Kaitila");
@@ -191,7 +191,7 @@ function init()
 
 	soundSystem = new soundSystemClass(); // a single instance used by the game
 
-	src = srcdiv.value; // textarea.value vs div.innerHTML
+	src = story_txt; // srcdiv.value; // textarea.value vs div.innerHTML
 	if (debugmode) console.log(src.length + " bytes of source text.");
 
 	// reset game state
@@ -1356,6 +1356,7 @@ function src_changed() // we updated the source code!
 
 function enableTab(id) {
     var el = document.getElementById(id);
+	if (!el) return;
     el.onkeydown = function(e) {
         if (e.keyCode === 9) { // tab was pressed
 
@@ -2170,16 +2171,29 @@ function swing_meter_init()
 
 
 
+function handle_story_download(data)
+{
+	init(data);
+	go(firstscene);
+}
 
-
-
-
+function load_story(filename) {
+  var xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+      console.log("story.txt loaded " + this.responseText.length + " bytes successfully.")
+	  handle_story_download(this.responseText);
+    }
+  };
+  console.log("CYOAwesome is downloading story.txt...");
+  xhttp.open("GET", "story.txt", true);
+  xhttp.send();
+}
 
 
 ////////////////////////////////////////////////
-init();
-go(firstscene);
-// load_game_state(); // buggy saved state
+// for ease of story writing, we load a TXT file
+load_story();
 ////////////////////////////////////////////////
 
 // } // end class constructor (if used on first line)
