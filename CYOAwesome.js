@@ -123,8 +123,8 @@ x visual novel mode (cls)
 "use strict"; // ensure clean clode
 
 var debugmode = true; // no console log if false
-var CLEARSCREEN_EACH_SCENE = false;
-var CLEARSCREEN_BEFORE_IMAGES = false;
+var CLEARSCREEN_EACH_SCENE = true; // after the user makes a choice
+var CLEARSCREEN_BEFORE_IMAGES = false; // any time we add a new image
 var LINKIFY_STORY_TEXT = false; // automagically add <a> to scene names
 var fastmode = false; // no text animation if we're editing
 var hurry = false; // user wants to fast fwd this scene
@@ -510,7 +510,7 @@ function parse_line(str) // main workhorse of the engine
 
 	if (str[0] == "-") // multiple choice list?
 	{
-		if (debugmode) console.log('Button:');
+		//if (debugmode) console.log('Button:');
 		str = str.slice(1).trim(); // strip off the dash
 		isbutton = true;
 	}
@@ -528,7 +528,7 @@ function parse_line(str) // main workhorse of the engine
 		{
 			incode = false;
 			codeUP = code.toUpperCase();
-			if (debugmode) console.log('['+codeUP+']');
+			//if (debugmode) console.log('['+codeUP+']');
 			if (!isbutton)
 			{
 
@@ -961,14 +961,18 @@ function parse_line(str) // main workhorse of the engine
 		{
 			if (codeUP != undefined)
 			{
+				if (debugmode) console.log('Button: ['+codeUP+']:' + text);
 				text = "<a class='choice' onclick=\"go('" + codeUP + "',this)\">" + text + "</a>";
 			}
 			else // - Text with no [link]
 			{
-				//text = "<div class='choice'>" + text + "</div>";
-				//text = "<a class='choice'>" + text + "</a>";
+				if (debugmode) console.log('ERROR: Button ['+text+'] does nothing (no scene name in square brackets)');
+				text = "<a class='choice' onclick=\"go('" + "" + "',this)\">" + text + "</a>";
 			}
 			currentchoices_div.innerHTML += text;
+
+			if (debugmode) console.log('choice html is ' + currentchoices_div.innerHTML);
+			
 			return "";
 		}
 		else // not a button
@@ -1049,7 +1053,7 @@ function clearscreen()
 	story_so_far = ''; // FIXME: hmmm....
 	currentscene_div.innerHTML = '';
 	story_so_far_div.innerHTML = '';
-	currentchoices_div.innerHTML = '';
+	//currentchoices_div.innerHTML = '';
 	// remember for dead end fixing
 	second_last_cls_scene = last_cls_scene;
 	last_cls_scene = currentscene;
@@ -1086,7 +1090,7 @@ function render(html,instant,cls)
 			story_so_far += strip_tags(currentscene_div.innerHTML,'<img><p><b><i><br>');
 			story_so_far_div.innerHTML = story_so_far;
 			currentscene_div.innerHTML = "";
-			currentchoices_div.innerHTML = "";
+			currentchoices_div.innerHTML = ""; // this is written to as we render
 		}
 		else
 		{
@@ -1235,9 +1239,13 @@ function animate_words(str)
 
 function go(scene,tag) // user made a choice
 {
+	if (debugmode) console.log('GO '+scene);
+	if (!scene) return;
+
+	currentchoices_div.innerHTML = ''; // cleared here, not in clearscreen() since it get written to just prior
+
 	scene = scene.toUpperCase();
 	if (tag) prevlink = tag.innerHTML; // HACK for removing links FIXME
-	if (debugmode) console.log('GO '+scene);
 	hurry = false; // reset previous "fast forward scene" request
 	turn_number++;
 	// for embedding:

@@ -8,9 +8,11 @@ body {
 	overflow:hidden;
 }
 
+br { clear:all; }
+
 div, textarea, input, a {
 	font-family: 'Special Elite', Serif;
-	font-size:20px;
+	font-size:24px;
 	line-height:28px;
 	color:#333333;
 	padding:32px; 
@@ -196,7 +198,8 @@ img {
 
 .menubutton { margin-left:16px; } 
 
-.dialog { color:green; }
+.dialogleft, .dialogright { display:inline-block; color:#226622; text-align:left; padding:24px; background:white; border-radius:8px; }
+.dialogright { color:#333388; text-align:right; float:right; clear:both; }
 
 #current_choices a, .choice { display:inline-block; margin:0; padding:0; text-align:center; width:50%; padding-top:8px; padding-bottom:8px; text-decoration:none; color:red; }
 #current_choices a:hover, .choice:hover { color:blue; background:rgba(255,255,0,0.1); }
