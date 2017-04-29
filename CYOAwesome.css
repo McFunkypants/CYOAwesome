@@ -8,7 +8,7 @@ body {
 	overflow:hidden;
 }
 
-br { clear:all; }
+br { clear:both; }
 
 div, textarea, input, a {
 	font-family: 'Special Elite', Serif;
@@ -199,17 +199,17 @@ img {
 .menubutton { margin-left:16px; } 
 
 .dialogleft, .dialogright { display:inline-block; color:#226622; text-align:left; padding:24px; background:white; border-radius:8px; }
-.dialogright { color:#333388; text-align:right; float:right; clear:both; }
+.dialogright { color:#333388; text-align:right; float:right; clear:both; overflow:auto; }
+.dialogright::after { background:red; height:16px; }
 
-#current_choices a, .choice { display:inline-block; margin:0; padding:0; text-align:center; width:50%; padding-top:8px; padding-bottom:8px; text-decoration:none; color:red; }
-#current_choices a:hover, .choice:hover { color:blue; background:rgba(255,255,0,0.1); }
+#current_choices a, .choice { display:inline-block; margin:0; padding:0; text-align:center; width:50%; padding-top:24px; padding-bottom:24px; text-decoration:none; color:red; }
+#current_choices a:hover, .choice:hover { color:blue; background:rgba(255,255,0,0.5); }
 
 #current_choices { margin:0px; padding:0px; 
 	background:rgba(255,255,0,0.2);
 	position:absolute;
 	display:block;
 	bottom:0px;
-	height:128px;
 	width:100%;
 }
 
