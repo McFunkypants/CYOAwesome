@@ -207,7 +207,9 @@ img {
 #current_choices a, .choice { display:inline-block; margin:0; padding:0; text-align:center; width:50%; padding-top:24px; padding-bottom:24px; text-decoration:none; color:red; }
 #current_choices a:hover, .choice:hover { color:blue; background:rgba(255,255,0,0.5); }
 
-#current_choices { margin:0px; padding:0px; 
+#current_choices { 
+	display:none;
+	margin:0px; padding:0px; 
 	background:rgba(255,255,0,0.2);
 	display:block;
 	width:100%;

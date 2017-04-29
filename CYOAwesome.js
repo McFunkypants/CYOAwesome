@@ -146,7 +146,7 @@ var visited_scenes = []; // so we know where we've been for SAW,1ST
 var inventory = []; // keys/values for HAS,NO,GET,DEL,PUT,>,<,=,+,-,?
 var walkthrough = []; // every link linked in order
 var story_so_far = ""; // optimization: remember the past html
-var ms_per_word = 50; // text animation speed
+var ms_per_word = 100; // text animation speed
 var prevlink = ""; // name of last clicked word
 
 // html elements
@@ -1250,6 +1250,8 @@ function animate_words(str)
 	if (anim_done)
 	{
 		if (debugmode) console.log('ANIM DONE!');
+		// finally we should show the current choices (if any)
+		if (currentchoices_div) currentchoices_div.style.display = 'block'; // show
 	}
 	else
 	{
@@ -1263,6 +1265,7 @@ function go(scene,tag) // user made a choice
 	if (!scene) return;
 
 	currentchoices_div.innerHTML = ''; // cleared here, not in clearscreen() since it get written to just prior
+	currentchoices_div.style.display = 'none'; // hide;
 
 	scene = scene.toUpperCase();
 	if (tag) prevlink = tag.innerHTML; // HACK for removing links FIXME
