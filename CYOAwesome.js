@@ -126,6 +126,7 @@ var debugmode = true; // no console log if false
 var CLEARSCREEN_EACH_SCENE = true; // after the user makes a choice
 var CLEARSCREEN_BEFORE_IMAGES = false; // any time we add a new image
 var LINKIFY_STORY_TEXT = false; // automagically add <a> to scene names
+var DOWNLOAD_STORY_TXT = false; // false: use the value of a textarea, true: ajax downloads story.txt
 var fastmode = false; // no text animation if we're editing
 var hurry = false; // user wants to fast fwd this scene
 
@@ -151,7 +152,7 @@ var prevlink = ""; // name of last clicked word
 
 // html elements
 var gamediv = null; // holds entire game
-var srcdiv = null; // source code editor
+var story_source_textarea = null; // source code embedded inside the html
 var gui_TL = null; // in game header
 var gui_TR = null; // in game header
 var currentscene_div = null; // where dynamic animated text goes
@@ -184,14 +185,25 @@ var the_scene_so_far = ""; // html ripped every frame TODO: optimize
 function init(story_txt)
 {
 	if (debugmode) console.log("------------------------------------------------");
-	if (debugmode) console.log("CYOAwesome v0.4 by Christer McFunkypants Kaitila");
+	if (debugmode) console.log("CYOAwesome v0.5 by Christer McFunkypants Kaitila");
 	if (debugmode) console.log("------------------------------------------------");
 
 	init_browser();
 
 	soundSystem = new soundSystemClass(); // a single instance used by the game
 
-	src = story_txt; // srcdiv.value; // textarea.value vs div.innerHTML
+	if (story_txt != undefined)
+	{
+		src = story_txt;
+	}
+	else // load story txt from a textarea in the html body
+	{
+		if (!story_source_textarea)
+			console.log("ERROR: no story data found! The html needs a <textarea id='game-source'>")
+		else
+			src = story_source_textarea.value;
+	}
+
 	if (debugmode) console.log(src.length + " bytes of source text.");
 
 	// reset game state
@@ -266,7 +278,7 @@ function init(story_txt)
 // grab references to a few key html elements
 function init_browser()
 {
-	//if (debugmode) console.log('init_browser');
+	if (debugmode) console.log('init_browser');
 	
 	// grab html elements
 	gamediv = document.getElementById("game");
@@ -275,7 +287,7 @@ function init_browser()
 	story_so_far_div = document.getElementById("story_so_far");
 	gui_TL = document.getElementById('gui_TL');
 	gui_TR = document.getElementById('gui_TR');
-	srcdiv = document.getElementById("game_source");
+	story_source_textarea = document.getElementById("game_source");
 
 	// HUD (gui) elements
 	stats_div = document.getElementById("stats_div");
@@ -1563,101 +1575,6 @@ function load_game_state() // FIXME don't playback at all: just remember entire 
 
 }
 
-function download_source_code()
-{
-	if (debugmode) console.log("download_source_code...");
-	if (window.download && srcdiv && srcdiv.value!="")
-	{
-		download(srcdiv.value, "source_code.txt", "text/plain");
-	}
-	else
-	{
-		if (debugmode) console.log("ERROR: no download.");
-	}
-}
-
-function generate_full_game_html()
-{
-	return srcdiv.value; // FIXME
-}
-
-function download_html()
-{
-	if (debugmode) console.log("download_html...");
-	var game_html = generate_full_game_html();
-	
-	if (window.download && (game_html!=""))
-	{
-		download(game_html, "playable_game.html", "text/html");
-	}
-	else
-	{
-		if (debugmode) console.log("ERROR: no game_html generated.");
-	}
-}
-
-function download_zip()
-{
-	if (debugmode) console.log("download_zip...");
-	var game_html = generate_full_game_html();
-	
-	if (window.download && (game_html!=""))
-	{
-		// zip it up
-		// https://stuk.github.io/jszip/
-		var zip = new JSZip();
-		zip.file("index.html", game_html);
-		//var img = 
-		zip.folder("images");
-		//img.file("smile.gif", imgData, {base64: true});
-		//var sfx = 
-		zip.folder("sounds");
-		zip.generateAsync({type:"blob"})
-		.then(function(content) {
-			download(content, "game.zip", "application/zip"); // should we use application/octet-stream instead?
-		});	
-		
-	}
-	else
-	{
-		if (debugmode) console.log("ERROR: no game_html generated.");
-	}
-
-
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-var settings_gui = null;
-function edit_settings()
-{
-	if (debugmode) console.log("edit_settings");
-	toggle('settings_gui');
-}
 
 function toggle(id)
 {
@@ -1676,67 +1593,9 @@ function toggle(id)
 	}
 }
 
-var help_gui = null;
-function edit_help()
-{
-	if (debugmode) console.log("edit_help");
-	toggle('help_gui');
-}	
-
-function creative_mode()
-{
-	if (debugmode) console.log("creative_mode");
-}	
-
-function new_game_code()
-{
-	if (debugmode) console.log("new_game_code");
-	srcdiv.value = ""; // textarea
-	story_so_far_div.innerHTML = "";
-	src_changed();
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+// swing meter and battle code
 //////////////////////////////////////////////////////////////// BATTLE BEGINS
-var g = {}; // som.js game engine functions FIXME TODO
+var g = {};  // legacy code, used to stand for game - TODO FIXME
 var swingdiv = null;
 var swingpowerdiv = null;
 var swingtextdiv = null;
@@ -2174,13 +2033,14 @@ function swing_meter_init()
 
 
 
+// run after ajax finishes downloading story.txt
 function handle_story_download(data)
 {
 	init(data);
 	go(firstscene);
 }
 
-function load_story(filename) {
+function download_story_txt() {
   var xhttp = new XMLHttpRequest();
   xhttp.onreadystatechange = function() {
     if (this.readyState == 4 && this.status == 200) {
@@ -2195,8 +2055,19 @@ function load_story(filename) {
 
 
 ////////////////////////////////////////////////
-// for ease of story writing, we load a TXT file
-load_story();
+// Runs Immediately!
 ////////////////////////////////////////////////
+if (DOWNLOAD_STORY_TXT)
+{ 
+	 // this only works on a real web server 
+	 download_story_txt(); 
+}
+else
+{
+	// grab data from a hidden textarea in html
+	init();
+	go(firstscene);
+}
+
 
 // } // end class constructor (if used on first line)

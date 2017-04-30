@@ -436,3 +436,101 @@ WINDMILLCROSSING
 [windmillcrossing.png]
 
 -->
+
+
+
+function download_source_code()
+{
+	if (debugmode) console.log("download_source_code...");
+	if (window.download && story_source_textarea && story_source_textarea.value!="")
+	{
+		download(story_source_textarea.value, "source_code.txt", "text/plain");
+	}
+	else
+	{
+		if (debugmode) console.log("ERROR: no download.");
+	}
+}
+
+function generate_full_game_html()
+{
+	return story_source_textarea.value; // FIXME
+}
+
+function download_html()
+{
+	if (debugmode) console.log("download_html...");
+	var game_html = generate_full_game_html();
+	
+	if (window.download && (game_html!=""))
+	{
+		download(game_html, "playable_game.html", "text/html");
+	}
+	else
+	{
+		if (debugmode) console.log("ERROR: no game_html generated.");
+	}
+}
+
+function download_zip()
+{
+	if (debugmode) console.log("download_zip...");
+	var game_html = generate_full_game_html();
+	
+	if (window.download && (game_html!=""))
+	{
+		// zip it up
+		// https://stuk.github.io/jszip/
+		var zip = new JSZip();
+		zip.file("index.html", game_html);
+		//var img = 
+		zip.folder("images");
+		//img.file("smile.gif", imgData, {base64: true});
+		//var sfx = 
+		zip.folder("sounds");
+		zip.generateAsync({type:"blob"})
+		.then(function(content) {
+			download(content, "game.zip", "application/zip"); // should we use application/octet-stream instead?
+		});	
+		
+	}
+	else
+	{
+		if (debugmode) console.log("ERROR: no game_html generated.");
+	}
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+var settings_gui = null;
+function edit_settings()
+{
+	if (debugmode) console.log("edit_settings");
+	toggle('settings_gui');
+}
