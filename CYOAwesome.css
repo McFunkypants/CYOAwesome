@@ -94,9 +94,10 @@ img {
 	column-count: 2;
 	column-gap: 64px;
 	column-fill: auto;
-	*/
 
-	OMIT-DEBUG-background:rgba(255,255,255,0.2);
+    /*
+    background:rgba(255,255,255,0.2);
+	*/
 
 }
 
@@ -218,7 +219,7 @@ img {
 }
 
 #choice_container {
-	position:absolute;
+	position:fixed;
 	bottom:0px;
 	width:100%;
 	padding:0; margin:0;
@@ -324,3 +325,9 @@ opacity:0.4;
 }
 
 #face_right img, #face_left img { width:100%; margin:0; padding:0; border:0; outline:0; }
+
+/* NPC faces in a VN style gui */
+.dialog_image { position:fixed; bottom:0px; max-width:15%; }
+
+/* leave room for a menu at the bottom */
+.leave_room_for_menu { max-height:80%; overflow:auto; }

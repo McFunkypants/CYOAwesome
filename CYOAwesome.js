@@ -1,5 +1,7 @@
 /*
 
+CYOAwesome (2022 update) by @mcfunkypants
+
 TODO - must have
 - clicking links during animation ignored - innerHTML is bad
 - only run code on same line if prev bool was true
@@ -7,7 +9,6 @@ TODO - must have
 - save and dumb load: with no go() at all
 - Dialogue (press any key)..
 - if first line is ignore due to code, don't render it as a brbr
-- sounds
 
 TODO - nice to have
 
@@ -26,7 +27,6 @@ TODO - nice to have
 - [GOTO SCENE] immediately run another scene after this one is idle
 - [PREV] to previous scene
 - game settings (volume etc)
-- fade out previous sounds
 - Timed choices (golf)
 - shake HOLD roll onUp golf dice
 - game state not saved on edit
@@ -65,7 +65,7 @@ TODO - nice to have
 - fast travel signposts
 - logins
 - more fonts
-- several templates (font+background+sounds+ornaments)
+- several templates (font+background+ornaments)
 - command-prompt mode: "TAVERN> _"
 - keyboard (arrow key / tab) controls
 - touch testing
@@ -98,7 +98,6 @@ x if we are at a DEAD END automatically give a return path to prev scene. HACKY.
 x delete all prev choice buttons on go, not just un <a>
 x if first line after scene is blank, don't render it as a brbr
 x test all logic
-x Music/SFX (howler)
 x > <
 x ==
 x insert inventory quantity
@@ -123,9 +122,11 @@ x visual novel mode (cls)
 "use strict"; // ensure clean clode
 
 var debugmode = true; // no console log if false
-var CLEARSCREEN_EACH_SCENE = true; // after the user makes a choice
+
+var CLEARSCREEN_EACH_SCENE = false; // after the user makes a choice
 var CLEARSCREEN_BEFORE_IMAGES = false; // any time we add a new image
-var LINKIFY_STORY_TEXT = false; // automagically add <a> to scene names
+// this should probably be false if you only want to use use a menu of choices
+var LINKIFY_STORY_TEXT = true; // automagically add <a> to scene names
 var DOWNLOAD_STORY_TXT = false; // false: use the value of a textarea, true: ajax downloads story.txt
 var fastmode = false; // no text animation if we're editing
 var hurry = false; // user wants to fast fwd this scene
@@ -147,7 +148,7 @@ var visited_scenes = []; // so we know where we've been for SAW,1ST
 var inventory = []; // keys/values for HAS,NO,GET,DEL,PUT,>,<,=,+,-,?
 var walkthrough = []; // every link linked in order
 var story_so_far = ""; // optimization: remember the past html
-var ms_per_word = 100; // text animation speed
+var ms_per_word = 50; // text animation speed
 var prevlink = ""; // name of last clicked word
 
 // html elements
@@ -158,9 +159,6 @@ var gui_TR = null; // in game header
 var currentscene_div = null; // where dynamic animated text goes
 var story_so_far_div = null; // non-interactive past story events
 var currentchoices_div = null; // for multiple choices so we can delete
-
-// audio engine see soundsystem.js
-var soundSystem = null;
 
 // HUD (gui) elements
 var stats_div = null;
@@ -185,12 +183,10 @@ var the_scene_so_far = ""; // html ripped every frame TODO: optimize
 function init(story_txt)
 {
 	if (debugmode) console.log("------------------------------------------------");
-	if (debugmode) console.log("CYOAwesome v0.5 by Christer McFunkypants Kaitila");
+	if (debugmode) console.log("CYOAwesome v0.6 by Christer McFunkypants Kaitila");
 	if (debugmode) console.log("------------------------------------------------");
 
 	init_browser();
-
-	soundSystem = new soundSystemClass(); // a single instance used by the game
 
 	if (story_txt != undefined)
 	{
@@ -265,13 +261,16 @@ function init(story_txt)
 					scene[currentscene] = [];
 				}
 				scene[currentscene].push(line[pnum]);
-				//if (debugmode) console.log("scene: " + scene[currentscene]);
 			}
 		}
 	}
 	
 	//srcdiv.style.display = 'none';
-	if (debugmode) console.log(sceneCount + " scenes created.");
+	if (debugmode) {
+        console.log(sceneCount + " scenes created.");
+        var all_scene_names_found = Object.keys(scene);
+        console.log(all_scene_names_found.join(', '));
+    }
 
 }
 
@@ -334,7 +333,7 @@ function preg_quote( str ) {
 	return (str+'').replace(/([\\\.\+\*\?\[\^\]\$\(\)\{\}\=\!\<\>\|\:])/g, "\\$1");
 }
 
-// soundy words that could get fun css styles
+// words that could get fun css styles
 var onomatopoeia = ['argh','achoo','ahem','bang','bash','bam','bark','bawl','beep',
 'belch','blab','blare','blurt','boing','boink','bonk','bong','boo','boo-hoo','boom',
 'bow-wow','brring','bubble','bump','burp','buzz','cackle','chatter','cheep','chirp',
@@ -501,7 +500,7 @@ function parse_line(str) // main workhorse of the engine
 	var run_code_now = true;
 	var pendingDialogFaceIMG = ''; // NPC face images
 
-	var do_not_linkify = false; // only true on images/sound so we don't linkify the html/url
+	var do_not_linkify = false; // only true on images so we don't linkify the html/url
 
 	if (str.startsWith('//'))
 	{
@@ -769,27 +768,12 @@ function parse_line(str) // main workhorse of the engine
 						// special case: inside dialog means a VN style NPC face
 						if (isdialog)
 						{
-							pendingDialogFaceIMG = "<img src='img/" + code + "'>";
+							pendingDialogFaceIMG = "<img class='dialog_image' src='img/" + code + "'>";
 						}
 						else // normal in-text image full size
 						{
-							text = text + "<img src='img/" + code + "'>";
+							text = text + "<img class='scene_image' src='img/" + code + "'>";
 						}
-						do_not_linkify = true;
-						verb = "";
-						item = "";
-						quantity = "";
-					}
-					else if (!skip && (
-						endsWith(codeUP,".MP3") ||
-						endsWith(codeUP,".WAV") ||
-						endsWith(codeUP,".OGG") ||
-						endsWith(codeUP,".WEBM")
-						))
-					{
-						var sfx = code.slice(0, -4); // remove the extension
-						if (debugmode) console.log("Playing sound: " + sfx);
-						soundSystem.play(sfx);
 						do_not_linkify = true;
 						verb = "";
 						item = "";
@@ -1391,94 +1375,6 @@ function enableTab(id) {
 
         }
     };
-}
-
-// class constructor for our sound engine
-function soundSystemClass() {
-
-	// private variables - no need to access from game code
-	var sounds = []; // an array of Howl() objects
-	var isMuted = false; // boolean state
-	var debug_sound = false; // write to console?
-
-	// play a sound (downloads a sound file the 1st time)
-	this.play = function(samplename,looping,vol) {
-		
-		if (debug_sound) console.log("soundSystem.play "+samplename);
-	
-		if (looping==null) looping = false;
-		if (vol==null) vol = 1;
-
-		if (!sounds[samplename]) // downloads on demand once only
-		{
-			if (debug_sound) console.log("soundSystem needs to download...");
-			// src array is filenames to try in what order
-			// every new browser supports .webm, 
-			// older ones like mp3 or ogg but not both
-			// for 2017 and later, .webm is recommendation
-			// TODO: we may want to try .webm first not last?
-			sounds[samplename] = new Howl({
-				src: [
-					'sfx/'+samplename+'.mp3',
-					'sfx/'+samplename+'.ogg',
-					'sfx/'+samplename+'.webm'],
-				loop: looping,
-				volume: vol				
-			});
-		}
-		
-		sounds[samplename].play(); // delayed if downloading
-	}
-	
-	// stops a sample from playing if it exists
-	this.stop = function(samplename) {
-		if (debug_sound) console.log("soundSystem.stop "+samplename);
-		if (sounds[samplename]) 
-			sounds[samplename].stop();
-	}
-
-	this.stopAll = function() {
-		for(var snd in sounds){
-			sounds[snd].stop();
-		}
-	}
-	
-	// fades in or out a sample - vol is 0 to 1, duration is seconds
-	this.fade = function(samplename,fromvol,tovol,duration)	{
-		if (debug_sound) console.log("soundSystem.fade "+samplename);
-		if (sounds[samplename])
-			sounds[samplename].fade(fromvol,tovol,duration);
-	}
-
-	// fades a sound from max to silence in half a second
-	this.fadeout = function(samplename) {
-		this.fade(samplename,1.0,0.0,0.5); // assumes prev vol is max FIXME
-	}
-
-	// turns off ALL SOUND
-	this.mute = function(on_or_off) {
-		if (debug_sound) console.log("soundSystem.mute "+on_or_off);
-		Howler.mute(on_or_off);
-		isMuted = on_or_off;
-	}
-	
-	// switches mute on/off
-	this.toggleMute = function() {
-		if (debug_sound) console.log("toggleMute");
-		this.mute(!isMuted);
-	}
-	
-	// returns true if a sample is currently playing
-	this.isPlaying = function(samplename) {
-		var result = false;
-
-		if (sounds[samplename])
-			result = sounds[samplename].playing()
-
-		if (debug_sound) console.log("soundSystem.isPlaying " + samplename + " = " + result);
-		return result;
-	}
-
 }
 
 function hurryup() // from onclick

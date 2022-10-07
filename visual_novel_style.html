@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>CYOAwesome by @McFunkypants</title>
+	<meta name="description" content="CYOAwesome by @McFunkypants">
+	<meta name="author" content="McFunkypants">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Special+Elite" >
+	<link rel="stylesheet" href="CYOAwesome.css">
+	<link rel="stylesheet" href="libs/animate.css">
+</head>
+<body>
+
+<div id='game' onclick='hurryup()'>
+	<div id='face_left'></div>
+	<div id='face_right'></div>
+	<div id='story_so_far'></div>
+	<div class='leave_room_for_menu' id='current_scene'></div>
+	<div id='choice_container'><div id='current_choices'></div></div>
+	<div id='swingmeter'>
+		<div id='swingtoolow'></div>
+		<div id='swinggoodlow'></div>
+		<div id='swingsweetlow'></div>
+		<div id='swingsweetest'></div>
+		<div id='swingsweethigh'></div>
+		<div id='swinggoodhigh'></div>
+		<div id='swingtext'>SWING METER</div>
+		<div id='swingpower'></div>
+	</div>
+</div>
+
+<textarea id="game_source">
+INTRO
+
+// Minimal VN style example
+// made to match Chris Markle's mockup
+// Public domain images by DasBilligeAlien
+// https://opengameart.org/content/visual-novel-tutorial-set
+
+"It was a dark and stormy night..." [guy.png] 
+
+"What was so stormy about it?" [gal.png]
+
+"The passionate kiss!"
+
+"What?!"
+
+I started to wonder if I should try to make her feel jealous?
+She'd totally deserve it after last Thursday...
+Then again, maybe I should try to smooth things over.
+
+- I think we may be in love! [THE FIGHT]
+- It wasn't JUST a kiss! [THE FIGHT]
+- It was nothing. [THE INTERROGATION]
+- Just kidding! There was no kiss. [HAPPY ENDING]
+
+THE FIGHT
+
+"How DARE you! I thought we were meant to be?"
+
+She left me. GAME OVER.
+
+- Restart [INTRO]
+
+THE INTERROGATION
+
+"What EXACTLY do you mean by that?"
+
+I could see from her eyes she meant business.
+It was time for me to tell her the truth.
+
+- I love you, and only you. [HAPPY ENDING]
+- I kiss other people all the time! [THE FIGHT]
+
+HAPPY ENDING
+
+"Oh, you rascal!"
+
+"No, seriously, you are the only one for me. Never worry."
+
+"I'm so lucky!"
+
+We lived happily every after. THE END.
+
+- Restart [INTRO]
+
+</textarea>
+<script src="CYOAwesome.js"></script>
+</body>
+</html>
