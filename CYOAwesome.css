@@ -58,6 +58,8 @@ img {
 	border:none;
 	max-width:100%;
 	border-radius:2px;
+	/* to avoid reflow flickering when animating the html */
+	min-height:256px;
 }
 
 #game { 
